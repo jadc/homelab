@@ -24,8 +24,14 @@
                 shell = pkgs.bash;
                 isSystemUser = true;
                 group = cfg.group;
+                
+                # TODO: remove
                 password = "temp";
+                extraGroups = [ "wheel" ];  # maybe remove
             };
         };
+
+        # TODO: maybe remove
+        security.sudo.wheelNeedsPassword = false;
     };
 }

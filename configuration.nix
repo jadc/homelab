@@ -1,4 +1,8 @@
 {
+    imports = [
+        ./config/service/wireguard
+    ];
+
     homelab = {
         system = {
             user = "main";
