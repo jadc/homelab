@@ -18,7 +18,24 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "secrets": "secrets"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1746157942,
+        "narHash": "sha256-xsCeW7ncFBSejL5OPv6Y7Voou0IQVD6co/T0g9mc+ec=",
+        "ref": "refs/heads/main",
+        "rev": "88b6abb01f3f3886b3c920d9153b4328f85b9db7",
+        "revCount": 3,
+        "type": "git",
+        "url": "ssh://git@github.com/jadc/homelab-secrets"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/jadc/homelab-secrets"
       }
     }
   },
