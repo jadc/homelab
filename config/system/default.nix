@@ -1,0 +1,7 @@
+{
+    imports = [
+        ./locale
+        ./misc
+        ./user
+    ];
+}
