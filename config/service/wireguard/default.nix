@@ -1,6 +1,8 @@
 { inputs, pkgs, ... }:
 
 let
+    prefixIPv4 = "10.66.66.";
+    prefixIPv6 = "fd42:42:42::";
     port = 123;
 in
 {
@@ -20,15 +22,11 @@ in
     networking.wireguard = {
         enable = true;
         interfaces.wg0 = {
-            ips = [ "10.66.66.1/24" "fd42:42:42::1/64" ];
+            ips = [ (prefixIPv4+"1/24") (prefixIPv6+"1/64") ];
             listenPort = port;
 
-            postSetup = ''
-                ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
-                '';
-            postShutdown = ''
-                ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
-                '';
+            postSetup    = "${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${prefixIPv4}0/24 -o eth0 -j MASQUERADE";
+            postShutdown = "${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${prefixIPv4}0/24 -o eth0 -j MASQUERADE";
 
             privateKeyFile = "/etc/wireguard-private.key";
 
@@ -36,12 +34,12 @@ in
                 # Laptop
                 {
                     publicKey = "H0Ux2fL64k6V9rG/BEegP0hNpye/gYNs6R1o/dIXNSg=";
-                    allowedIPs = [ "10.66.66.2/32" "fd42:42:42::2/128" ];
+                    allowedIPs = [ (prefixIPv4+"2/32") (prefixIPv6+"2/128") ];
                 }
                 # iPhone
                 {
                     publicKey = "F5dy2UCbUGr9O3Qf5VMYrg3s49qlfNL4bmYPWUWWKQo=";
-                    allowedIPs = [ "10.66.66.3/32" "fd42:42:42::3/128" ];
+                    allowedIPs = [ (prefixIPv4+"3/32") (prefixIPv6+"3/128") ];
                 }
             ];
         };
