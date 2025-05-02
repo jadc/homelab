@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 
 {
     options.homelab.system = {
@@ -21,6 +21,7 @@
             };
             users.${cfg.user} = {
                 uid = 994;
+                shell = pkgs.bash;
                 isSystemUser = true;
                 group = cfg.group;
                 password = "temp";
