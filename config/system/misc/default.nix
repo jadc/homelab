@@ -9,6 +9,13 @@
         experimental-features = [ "nix-command" "flakes" ];
     };
 
+    # Use systemd-boot as a bootloader
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+        timeout = 0;
+    };
+
     # Fix shutdown hang
     hardware.enableAllFirmware = true;
 

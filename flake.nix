@@ -3,10 +3,12 @@
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
+        /*
         secrets = {
             url = "git+ssh://git@github.com/jadc/homelab-secrets";
             flake = false;
         };
+        */
     };
 
     outputs = { self, nixpkgs, ... } @ inputs: {
