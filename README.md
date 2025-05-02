@@ -8,7 +8,7 @@ TODO
 To create a virtual machine with this configuration, first build it:
 
 ```sh 
-nix build .#jadlab
+nixos-rebuild build-vm --flake .#jadlab
 ```
 
 Then, run it:
