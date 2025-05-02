@@ -23,6 +23,7 @@
                 uid = 994;
                 isSystemUser = true;
                 group = cfg.group;
+                password = "temp";
             };
         };
     };
