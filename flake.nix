@@ -11,12 +11,11 @@
         */
     };
 
-    outputs = { self, nixpkgs, ... } @ inputs: {
-        nixosConfigurations = let
-            hostname = "jadlab";
-            system = "x86_64-linux";
-            inherit (self) outputs;
-        in {
+    outputs = { self, nixpkgs, ... } @ inputs: let 
+        hostname = "jadlab";
+        system = "x86_64-linux";
+    in {
+        nixosConfigurations = let inherit (self) outputs; in {
             ${hostname} = nixpkgs.lib.nixosSystem {
                 inherit system;
                 pkgs = import nixpkgs {
@@ -32,6 +31,15 @@
                     ./config
                     ./configuration.nix
                 ];
+            };
+        };
+
+        # Allows testing the configuration in a VM
+        apps.${system} = rec {
+            default = test;
+            test = {
+                type = "app";
+                program = "${self.nixosConfigurations.${hostname}.config.system.build.vm}/bin/run-${hostname}-vm";
             };
         };
     };

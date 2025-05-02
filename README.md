@@ -5,14 +5,8 @@ The declarative NixOS configuration of my personal home lab.
 TODO
 
 ## Testing
-To create a virtual machine with this configuration, first build it:
+To create a virtual machine with this configuration, simply run:
 
 ```sh 
-nixos-rebuild build-vm --flake .#jadlab
-```
-
-Then, run it:
-
-```sh
-./result/bin/run-jadlab
+nix run
 ```
