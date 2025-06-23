@@ -6,6 +6,7 @@
         ./config/system/misc
 
         # Services
+        ./config/service/ssh
         ./config/service/wireguard
     ];
 
