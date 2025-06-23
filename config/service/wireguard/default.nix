@@ -4,6 +4,7 @@ let
     prefixIPv4 = "10.66.66.";
     prefixIPv6 = "fd42:42:42::";
     port = 123;
+
 in
 {
     # enable NAT
@@ -16,9 +17,6 @@ in
         firewall.allowedUDPPorts = [ port ];
     };
 
-    # Copy private key from secrets
-    environment.etc."wireguard-private.key".source = "${inputs.secrets}/wireguard-private.key";
-
     networking.wireguard = {
         enable = true;
         interfaces.wg0 = {
@@ -28,7 +26,7 @@ in
             postSetup    = "${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${prefixIPv4}0/24 -o eth0 -j MASQUERADE";
             postShutdown = "${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${prefixIPv4}0/24 -o eth0 -j MASQUERADE";
 
-            privateKeyFile = "/etc/wireguard-private.key";
+            privateKeyFile = "${inputs.secrets}/wireguard-private.key";
 
             peers = [
                 # Laptop
