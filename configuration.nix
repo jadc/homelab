@@ -1,6 +1,11 @@
 {
     imports = [
-        ./config
+        # System
+        ./config/system/locale
+        ./config/system/user
+        ./config/system/misc
+
+        # Services
         ./config/service/wireguard
     ];
 
