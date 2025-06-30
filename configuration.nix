@@ -2,8 +2,9 @@
     imports = [
         # System
         ./config/system/locale
-        ./config/system/user
         ./config/system/misc
+        ./config/system/tlp
+        ./config/system/user
 
         # Services
         ./config/service/ssh
