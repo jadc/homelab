@@ -9,7 +9,7 @@
         };
     };
 
-    outputs = { self, nixpkgs, ... } @ inputs: let 
+    outputs = { self, nixpkgs, ... } @ inputs: let
         hostname = "homelab";
         system = "x86_64-linux";
     in {
@@ -26,7 +26,9 @@
 
                 modules = [
                     { networking.hostName = hostname; }
-                    ./configuration.nix
+                    ./config/system
+                    ./config/service
+                    ./config/configuration.nix
                 ];
             };
         };
