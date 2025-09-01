@@ -3,6 +3,7 @@
         # System
         ./config/system/locale
         ./config/system/misc
+        ./config/system/systemd-boot
         ./config/system/tlp
         ./config/system/user
 
