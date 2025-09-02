@@ -3,8 +3,6 @@
         # System
         ./config/system/locale
         ./config/system/misc
-        ./config/system/networkmanager
-        ./config/system/systemd-boot
         ./config/system/tlp
         ./config/system/user
 

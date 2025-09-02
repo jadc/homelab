@@ -11,7 +11,12 @@
 
     # Use systemd-boot as a bootloader
     boot.loader = {
-        systemd-boot.enable = true;
+        systemd-boot = {
+            enable = true;
+
+            # Ignores "Failed to write 'LoaderSystemToken' EFI variable: Invalid argument"
+            graceful = true;
+        };
         efi.canTouchEfiVariables = true;
         timeout = 0;
     };
@@ -28,6 +33,9 @@
         };
     };
 
+    # Standard packages
+    programs.git.enable = true;
+
     # Do not need to update
-    system.stateVersion = "24.05";
+    system.stateVersion = "25.05";
 }
