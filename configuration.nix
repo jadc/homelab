@@ -4,6 +4,7 @@
         ./config/system/locale
         ./config/system/misc
         ./config/system/tlp
+        ./config/system/tools
         ./config/system/user
 
         # Services
