@@ -9,10 +9,11 @@
     };
 
     outputs = { self, nixpkgs, ... } @ inputs: let
+        hostname = "homelab";
         system = "x86_64-linux";
     in {
         nixosConfigurations = let inherit (self) outputs; in {
-            default = nixpkgs.lib.nixosSystem {
+            ${hostname} = nixpkgs.lib.nixosSystem {
                 inherit system;
                 pkgs = import nixpkgs {
                     inherit system;
@@ -23,6 +24,7 @@
                 };
 
                 modules = [
+                    { networking.hostName = hostname; }
                     ./configuration.nix
                     ./hardware-configuration.nix
                     ./config
@@ -35,7 +37,7 @@
             default = test;
             test = {
                 type = "app";
-                program = "${self.nixosConfigurations.default.config.system.build.vm}/bin/run-default-vm";
+                program = "${self.nixosConfigurations.${hostname}.config.system.build.vm}/bin/run-${hostname}-vm";
             };
         };
     };

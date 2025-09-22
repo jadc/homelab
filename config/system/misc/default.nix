@@ -1,8 +1,6 @@
 { pkgs, ... }:
 
 {
-    networking.hostName = "homelab";
-
     # Nix configuration
     nix.settings = {
         auto-optimise-store = pkgs.stdenv.isLinux;
