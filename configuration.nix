@@ -18,6 +18,15 @@
         system = {
             timeZone = "America/Edmonton";
             locale = "en_CA.UTF-8";
+
+            devices = [
+                {
+                    device = "/dev/disk/by-uuid/d91b87c6-61f9-4901-99ee-efde2b36bbeb";
+                    mountPoint = "/data/media";
+                    fsType = "xfs";
+                    group = "media";
+                }
+            ];
         };
 
         service = {
