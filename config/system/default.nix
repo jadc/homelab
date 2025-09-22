@@ -1,11 +1,10 @@
-{ lib, ... }:
+# Import all modules in this directory.
 
-# Imports all sibling directories to this file
 let
-    subdirs = lib.filterAttrs (name: type:
-        type == "directory" &&
-        builtins.pathExists (./. + "/${name}/default.nix")
-    ) (builtins.readDir ./.);
+    files = builtins.readDir ./.;
+    dirs = builtins.filter
+        (name: files.${name} == "directory")
+        (builtins.attrNames files);
 in {
-    imports = map (name: ./. + "/${name}") (lib.attrNames subdirs);
+    imports = builtins.map (dir: ./${dir}) dirs;
 }

@@ -1,5 +1,4 @@
 {
-    description = "jad's homelab";
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
@@ -10,11 +9,10 @@
     };
 
     outputs = { self, nixpkgs, ... } @ inputs: let
-        hostname = "homelab";
         system = "x86_64-linux";
     in {
         nixosConfigurations = let inherit (self) outputs; in {
-            ${hostname} = nixpkgs.lib.nixosSystem {
+            default = nixpkgs.lib.nixosSystem {
                 inherit system;
                 pkgs = import nixpkgs {
                     inherit system;
@@ -25,7 +23,6 @@
                 };
 
                 modules = [
-                    { networking.hostName = hostname; }
                     ./configuration.nix
                     ./hardware-configuration.nix
                     ./config
@@ -38,7 +35,7 @@
             default = test;
             test = {
                 type = "app";
-                program = "${self.nixosConfigurations.${hostname}.config.system.build.vm}/bin/run-${hostname}-vm";
+                program = "${self.nixosConfigurations.default.config.system.build.vm}/bin/run-default-vm";
             };
         };
     };
