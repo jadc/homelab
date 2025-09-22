@@ -11,7 +11,12 @@ in
         port           = mkOption { type = types.int; };
         privateKeyFile = mkOption { type = types.str; };
         peers          = mkOption {
-            type = with types; listOf (submodule peerOpts);
+            type = with types; listOf (submodule {
+                options = {
+                    publicKey  = mkOption { type = types.singleLineStr; };
+                    allowedIPs = mkOption { type = with types; listOf str; };
+                };
+            });
         };
     };
 
