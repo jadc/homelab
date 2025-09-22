@@ -6,6 +6,10 @@
             timeZone = "America/Edmonton";
             locale = "en_CA.UTF-8";
 
+            superuser = {
+                hashedPasswordFile = "${inputs.secrets}/passwd.hash";
+            };
+
             devices = {
                 "/data/media" = {
                     device = "/dev/disk/by-uuid/d91b87c6-61f9-4901-99ee-efde2b36bbeb";
