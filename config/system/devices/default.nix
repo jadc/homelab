@@ -5,6 +5,7 @@ let
 in
 {
     options.homelab.system.${name} = with lib; mkOption {
+        default = {};
         type = with types; attrsOf (submodule {
             options = {
                 enable = mkEnableOption "this device mount" // {
@@ -55,14 +56,13 @@ in
         enabled = lib.filterAttrs (mountPoint: x: x.enable) cfg;
     in {
         # Create mountPoint directory
-        systemd.tmpfiles.rules = with lib; mkMerge (
+        systemd.tmpfiles.rules = with lib;
             mapAttrsToList (mountPoint: x:
                 let
                     group = if x.group != null then x.group else "-";
                 in
                     "d ${mountPoint} ${x.permissions} ${x.owner} ${group} - -"
-            ) enabled
-        );
+            ) enabled;
 
         # Mount device to mountPoint
         fileSystems = with lib; mkMerge (
