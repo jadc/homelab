@@ -1,20 +1,6 @@
 { config, inputs, ... }:
 
 {
-    imports = [
-        # System
-        ./config/system/devices
-        ./config/system/locale
-        ./config/system/misc
-        ./config/system/tlp
-        ./config/system/tools
-        ./config/system/user
-
-        # Services
-        ./config/service/ssh
-        ./config/service/wireguard
-    ];
-
     homelab = {
         system = {
             timeZone = "America/Edmonton";
@@ -38,25 +24,6 @@
                     {
                         publicKey = "F5dy2UCbUGr9O3Qf5VMYrg3s49qlfNL4bmYPWUWWKQo=";
                         allowedIPs = [ "${cfg.ipv4Prefix}.2/32" "${cfg.ipv6Prefix}::2/128" ];
-                    }
-                ];
-                port = 443;
-                privateKeyFile = "${inputs.secrets}/wireguard-private.key";
-            };
-        };
-
-        service = {
-            wireguard = {
-                interface = "eno1";
-                ipv4Prefix = "10.66.66";
-                ipv6Prefix = "fd42:42:42";
-                peers = let
-                    ipv4 = config.homelab.service.wireguard.ipv4Prefix;
-                    ipv6 = config.homelab.service.wireguard.ipv6Prefix;
-                in [
-                    {
-                        publicKey = "F5dy2UCbUGr9O3Qf5VMYrg3s49qlfNL4bmYPWUWWKQo=";
-                        allowedIPs = [ "${ipv4}.2/32" "${ipv6}::2/128" ];
                     }
                 ];
                 port = 443;

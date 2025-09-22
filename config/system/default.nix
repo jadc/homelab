@@ -5,7 +5,7 @@ let
     subdirs = lib.filterAttrs (name: type:
         type == "directory" &&
         builtins.pathExists (./. + "/${name}/default.nix")
-    ) builtins.readDir ./.;
+    ) (builtins.readDir ./.);
 in {
     imports = map (name: ./. + "/${name}") (lib.attrNames subdirs);
 }
