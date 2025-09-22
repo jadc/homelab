@@ -1,42 +1,53 @@
-{ inputs, pkgs, ... }:
+{ config, lib, ... }:
 
 let
-    prefixIPv4 = "10.66.66";
-    prefixIPv6 = "fd42:42:42";
-    listenPort = 443;
-    externalInterface = "eno1";
+    name = "wireguard";
 in
 {
-    # Enable NAT
-    networking = {
-        nat = {
-            inherit externalInterface;
-            enable = true;
-            internalInterfaces = [ "wg0" ];
+    options.homelab.service.${name} = with lib; {
+        interface      = mkOption { type = types.str; };
+        ipv4Prefix     = mkOption { type = types.str; };
+        ipv6Prefix     = mkOption { type = types.str; };
+        port           = mkOption { type = types.int; };
+        privateKeyFile = mkOption { type = types.str; };
+        peers          = mkOption {
+            type = with types; listOf (submodule {
+                options = {
+                    publicKey  = mkOption { type = types.singleLineStr; };
+                    allowedIPs = mkOption { type = with types; listOf str; };
+                };
+            });
         };
-        firewall.allowedUDPPorts = [ listenPort ];
     };
 
-    # Enable IP forwarding for routing traffic through the VPN
-    boot.kernel.sysctl = {
-        "net.ipv4.ip_forward" = 1;
-        "net.ipv6.conf.all.forwarding" = 1;
-    };
+    config = let
+        cfg = config.homelab.service.${name};
+    in {
+        # Configure WireGuard interface
+        networking.wireguard = {
+            enable = true;
+            interfaces.wg0 = {
+                ips = [ "${cfg.ipv4Prefix}.1/24" "${cfg.ipv6Prefix}::1/64" ];
+                listenPort = cfg.port;
+                peers = cfg.peers;
+                privateKeyFile = cfg.privateKeyFile;
+            };
+        };
 
-    # Configure WireGuard interface
-    networking.wireguard = {
-        enable = true;
-        interfaces.wg0 = {
-            inherit listenPort;
-            ips = [ "${prefixIPv4}.1/24" "${prefixIPv6}::1/64" ];
-            privateKeyFile = "${inputs.secrets}/wireguard-private.key";
+        # Enable NAT
+        networking = {
+            nat = {
+                enable = true;
+                externalInterface = cfg.interface;
+                internalInterfaces = [ "wg0" ];
+            };
+            firewall.allowedUDPPorts = [ cfg.port ];
+        };
 
-            peers = [
-                {
-                    publicKey = "F5dy2UCbUGr9O3Qf5VMYrg3s49qlfNL4bmYPWUWWKQo=";
-                    allowedIPs = [ "${prefixIPv4}.2/32" "${prefixIPv6}::2/128" ];
-                }
-            ];
+        # Enable IP forwarding for routing traffic through the VPN
+        boot.kernel.sysctl = {
+            "net.ipv4.ip_forward" = 1;
+            "net.ipv6.conf.all.forwarding" = 1;
         };
     };
 }
