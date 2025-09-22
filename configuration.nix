@@ -3,6 +3,7 @@
 {
     imports = [
         # System
+        ./config/system/devices
         ./config/system/locale
         ./config/system/misc
         ./config/system/tlp
