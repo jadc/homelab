@@ -28,6 +28,7 @@
                     { networking.hostName = hostname; }
                     ./configuration.nix
                     ./hardware-configuration.nix
+                    ./config
                 ];
             };
         };
