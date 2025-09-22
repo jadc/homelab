@@ -1,10 +1,10 @@
 { config, lib, ... }:
 
 let
-    service = "wireguard";
+    name = "wireguard";
 in
 {
-    options.homelab.service.${service} = with lib; {
+    options.homelab.service.${name} = with lib; {
         interface      = mkOption { type = types.str; };
         ipv4Prefix     = mkOption { type = types.str; };
         ipv6Prefix     = mkOption { type = types.str; };
@@ -21,7 +21,7 @@ in
     };
 
     config = let
-        cfg = config.homelab.service.${service};
+        cfg = config.homelab.service.${name};
     in {
         # Configure WireGuard interface
         networking.wireguard = {
@@ -30,7 +30,7 @@ in
                 ips = [ "${cfg.ipv4Prefix}.1/24" "${cfg.ipv6Prefix}::1/64" ];
                 listenPort = cfg.port;
                 peers = cfg.peers;
-                privateKeyFile = cfg.privateKey;
+                privateKeyFile = cfg.privateKeyFile;
             };
         };
 
