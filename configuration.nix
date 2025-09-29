@@ -33,6 +33,18 @@
                 port = 443;
                 privateKeyFile = "${inputs.secrets}/wireguard-private.key";
             };
+
+            caddy = {
+                enable = true;
+                tls.certFile = ./config/service/caddy/cert.pem;
+                tls.keyFile = "${inputs.secrets}/ssl-private.key";
+            };
+
+            jellyfin.enable = true;
+            caddy.proxies.jellyfin = {
+                domain = "media.jad.red";
+                port = 8096;
+            };
         };
     };
 }
