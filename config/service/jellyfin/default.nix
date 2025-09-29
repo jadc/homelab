@@ -1,13 +1,24 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let
+    name = "jellyfin";
+in
 {
-    services.jellyfin.enable = true;
-    environment.systemPackages = [
-        pkgs.jellyfin
-        pkgs.jellyfin-web
-        pkgs.jellyfin-ffmpeg
-    ];
+    options.homelab.service.${name} = with lib; {
+        enable = mkEnableOption name;
+    };
+    config = let
+        cfg = config.homelab.service.${name};
+    in lib.mkIf cfg.enable {
+        services.jellyfin = {
+            enable = true;
+            openFirewall = false;
+        };
 
-    # Add to reverse proxy
-    # services.caddy.virtualHosts."todo".extraConfig = ''reverse_proxy 127.0.0.1:8096'';
+        environment.systemPackages = with pkgs; [
+            jellyfin
+            jellyfin-ffmpeg
+            jellyfin-web
+        ];
+    };
 }
