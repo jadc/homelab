@@ -38,14 +38,8 @@ in
 
                     extraConfig = mkOption {
                         type = types.lines;
-                        default = ''
-                            header_up Host {host}
-                            header_up X-Real-IP {remote_host}
-                            header_up X-Forwarded-For {remote_host}
-                            header_up X-Forwarded-Proto {scheme}
-                            header_up X-Forwarded-Host {host}
-                        '';
-                        description = "Configuration for this proxy";
+                        default = "";
+                        description = "Extra configuration for this proxy";
                     };
                 };
             });
@@ -56,25 +50,28 @@ in
 
     config = let
         cfg = config.homelab.service.${name};
+        certFile = if cfg.tls.certFile != null then toString cfg.tls.certFile else null;
+        keyFile = if cfg.tls.keyFile != null then toString cfg.tls.keyFile else null;
     in lib.mkIf cfg.enable {
-        services.caddy = {
-            enable = true;
+            services.caddy = {
+                enable = true;
 
-            virtualHosts = lib.mkMerge (
-                lib.mapAttrsToList (name: proxyCfg: {
-                    ${proxyCfg.domain} = {
-                        extraConfig = ''
-                            ${lib.optionalString (cfg.tls.certFile != null && cfg.tls.keyFile != null)
-                                "tls ${cfg.tls.certFile} ${cfg.tls.keyFile}"}
-                            reverse_proxy 127.0.0.1:${toString proxyCfg.port} {
-                                ${proxyCfg.extraConfig}
+                virtualHosts = lib.mkMerge (
+                    lib.mapAttrsToList (name: proxyCfg: {
+                        ${proxyCfg.domain} = {
+                            extraConfig = ''
+                                ${lib.optionalString (certFile != null && keyFile != null)
+                                "tls ${certFile} ${keyFile}"}
+
+                            reverse_proxy localhost:${toString proxyCfg.port}${
+                                lib.optionalString (proxyCfg.extraConfig != "") " {\n${proxyCfg.extraConfig}\n}"
                             }
-                        '';
-                    };
-                }) cfg.proxies
-            );
-        };
+                            '';
+                        };
+                    }) cfg.proxies
+                );
+            };
 
-        networking.firewall.allowedTCPPorts = [ 80 443 ];
-    };
+            networking.firewall.allowedTCPPorts = [ 80 443 ];
+        };
 }
