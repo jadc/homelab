@@ -1,4 +1,5 @@
 { config, lib, ... }:
+
 let
     name = "caddy";
 in
@@ -23,8 +24,6 @@ in
         proxies = mkOption {
             type = types.attrsOf (types.submodule {
                 options = {
-                    enable = mkEnableOption "reverse proxy";
-
                     domain = mkOption {
                         type = types.str;
                         description = "Domain for this service";
@@ -57,24 +56,23 @@ in
 
     config = let
         cfg = config.homelab.service.${name};
-
-        # Build virtualHosts with domain as key from enabled proxies
-        virtualHosts = lib.mapAttrs' (name: proxyCfg: {
-            name = proxyCfg.domain;
-            value = {
-                extraConfig = ''
-                    ${lib.optionalString (cfg.tls.certFile != null && cfg.tls.keyFile != null)
-                        "tls ${cfg.tls.certFile} ${cfg.tls.keyFile}"}
-                    reverse_proxy 127.0.0.1:${toString proxyCfg.port} {
-                        ${proxyCfg.extraConfig}
-                    }
-                '';
-            };
-        }) (lib.filterAttrs (n: v: v.enable) cfg.proxies);
     in lib.mkIf cfg.enable {
         services.caddy = {
             enable = true;
-            inherit virtualHosts;
+
+            virtualHosts = lib.mkMerge (
+                lib.mapAttrsToList (name: proxyCfg: {
+                    ${proxyCfg.domain} = {
+                        extraConfig = ''
+                            ${lib.optionalString (cfg.tls.certFile != null && cfg.tls.keyFile != null)
+                                "tls ${cfg.tls.certFile} ${cfg.tls.keyFile}"}
+                            reverse_proxy 127.0.0.1:${toString proxyCfg.port} {
+                                ${proxyCfg.extraConfig}
+                            }
+                        '';
+                    };
+                }) cfg.proxies
+            );
         };
 
         networking.firewall.allowedTCPPorts = [ 80 443 ];
