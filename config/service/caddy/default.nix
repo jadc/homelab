@@ -56,6 +56,13 @@ in
             services.caddy = {
                 enable = true;
 
+                # Disable HTTP/3 (QUIC) to disable UDP 443
+                globalConfig = ''
+                    servers {
+                        protocols h1 h2
+                    }
+                '';
+
                 virtualHosts = lib.mkMerge (
                     lib.mapAttrsToList (name: proxyCfg: {
                         ${proxyCfg.domain} = {
