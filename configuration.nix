@@ -36,7 +36,7 @@
 
             caddy = {
                 enable = true;
-                tls.certFile = ./config/service/caddy/cert.pem;
+                tls.certFile = toString ./config/service/caddy/cert.pem;
                 tls.keyFile = "${inputs.secrets}/ssl-private.key";
             };
 
