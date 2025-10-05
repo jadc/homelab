@@ -46,11 +46,18 @@ in
         # Configure service
         services.syncthing = {
             enable = true;
-            openDefaultPorts = true;
-            settings.options.urAccepted = -1;
             dataDir = cfg.root;
             group = cfg.group;
             user = cfg.user;
+
+            openDefaultPorts = true;
+            settings = {
+                # Disable telemetry
+                options.urAccepted = -1;
+
+                # Allow WebUI access on LAN
+                gui.address = "0.0.0.0:8384";
+            };
         };
     };
 }
