@@ -11,10 +11,9 @@
             };
 
             devices = {
-                "/data/media" = {
-                    device = "/dev/disk/by-uuid/d91b87c6-61f9-4901-99ee-efde2b36bbeb";
+                "/data" = {
+                    device = "/dev/disk/by-uuid/5db1a674-6c38-4956-a7ca-ae7dce2c7772";
                     fsType = "xfs";
-                    group = "media";
                 };
             };
         };
@@ -45,6 +44,12 @@
                 domain = "media.jad.red";
                 port = 8096;
             };
+
+            syncthing = {
+                enable = true;
+                root = "/data/sync";
+            };
         };
     };
 }
+
