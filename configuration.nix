@@ -11,7 +11,8 @@
             };
 
             devices = {
-                "/data" = {
+                data = {
+                    mountPoint = "/data";
                     device = "/dev/disk/by-uuid/5db1a674-6c38-4956-a7ca-ae7dce2c7772";
                     fsType = "xfs";
                 };
@@ -39,7 +40,11 @@
                 tls.keyFile = "${inputs.secrets}/ssl-private.key";
             };
 
-            jellyfin.enable = true;
+            jellyfin = {
+                enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/media";
+                group = "media";
+            };
             caddy.proxies.jellyfin = {
                 domain = "media.jad.red";
                 port = 8096;
@@ -47,7 +52,7 @@
 
             syncthing = {
                 enable = true;
-                root = "/data/sync";
+                root = "${config.homelab.system.devices.data.mountPoint}/sync";
             };
         };
     };
