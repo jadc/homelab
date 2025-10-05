@@ -12,6 +12,12 @@ in
                     default = true;
                 };
 
+                mountPoint = mkOption {
+                    type = types.str;
+                    description = "Path where the device will be mounted";
+                    example = "/data";
+                };
+
                 device = mkOption {
                     type = types.str;
                     description = "Device to be mounted";
@@ -53,21 +59,21 @@ in
 
     config = let
         cfg = config.homelab.system.${name};
-        enabled = lib.filterAttrs (mountPoint: x: x.enable) cfg;
+        enabled = lib.filterAttrs (name: x: x.enable) cfg;
     in {
         # Create mountPoint directory
         systemd.tmpfiles.rules = with lib;
-            mapAttrsToList (mountPoint: x:
+            mapAttrsToList (name: x:
                 let
                     group = if x.group != null then x.group else "-";
                 in
-                    "d ${mountPoint} ${x.permissions} ${x.owner} ${group} - -"
+                    "d ${x.mountPoint} ${x.permissions} ${x.owner} ${group} - -"
             ) enabled;
 
         # Mount device to mountPoint
         fileSystems = with lib; mkMerge (
-            mapAttrsToList (mountPoint: x: {
-                ${mountPoint} = {
+            mapAttrsToList (name: x: {
+                ${x.mountPoint} = {
                     device = x.device;
                     fsType = x.fsType;
                     options = x.options;
