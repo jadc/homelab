@@ -47,6 +47,7 @@ in
         services.syncthing = {
             enable = true;
             openDefaultPorts = true;
+            settings.options.urAccepted = -1;
             dataDir = cfg.root;
             group = cfg.group;
             user = cfg.user;
