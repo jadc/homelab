@@ -50,14 +50,14 @@ in
             group = cfg.group;
             user = cfg.user;
 
+            # Forwarding ports improves performance
             openDefaultPorts = true;
-            settings = {
-                # Disable telemetry
-                options.urAccepted = -1;
 
-                # Allow WebUI access on LAN
-                gui.address = "0.0.0.0:8384";
-            };
+            # Disable telemetry
+            settings.options.urAccepted = -1;
+
+            # Allow WebUI access on LAN
+            guiAddress = "0.0.0.0:8384";
         };
     };
 }
