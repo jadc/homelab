@@ -59,5 +59,8 @@ in
             # Allow WebUI access on LAN
             guiAddress = "0.0.0.0:8384";
         };
+
+        # Open firewall for web UI
+        networking.firewall.allowedTCPPorts = [ 8384 ];
     };
 }
