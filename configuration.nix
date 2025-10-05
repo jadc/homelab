@@ -48,8 +48,6 @@
             syncthing = {
                 enable = true;
                 root = "/data/sync";
-                user = "syncthing";
-                group = "sync";
             };
         };
     };

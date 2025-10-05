@@ -11,18 +11,17 @@ in
             type = types.str;
             default = "/var/lib/syncthing";
             description = "Root directory for synced files";
-            example = "/data/sync";
         };
 
         user = mkOption {
             type = types.str;
-            default = "syncthing";
+            default = name;
             description = "User account under which Syncthing runs";
         };
 
         group = mkOption {
             type = types.str;
-            default = "syncthing";
+            default = name;
             description = "Group under which Syncthing runs";
         };
     };
