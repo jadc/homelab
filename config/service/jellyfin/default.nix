@@ -7,10 +7,10 @@ in
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
+        # TODO: probably move to *arr config
         root = mkOption {
             type = types.str;
-            default = "/var/lib/jellyfin";
-            description = "Root directory for Jellyfin data";
+            description = "Root directory for media";
         };
 
         user = mkOption {
@@ -38,14 +38,16 @@ in
         };
 
         # Create root directory with appropriate permissions
+        # TODO: probably move to *arr config
         systemd.tmpfiles.rules = [
             "d ${cfg.root} 0755 ${cfg.user} ${cfg.group} - -"
+            "d ${cfg.root}/movies 0755 ${cfg.user} ${cfg.group} - -"
+            "d ${cfg.root}/shows 0755 ${cfg.user} ${cfg.group} - -"
         ];
 
         services.jellyfin = {
             enable = true;
             openFirewall = true;
-            dataDir = cfg.root;
             user = cfg.user;
             group = cfg.group;
         };
