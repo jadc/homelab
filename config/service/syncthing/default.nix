@@ -30,6 +30,16 @@ in
     config = let
         cfg = config.homelab.service.${name};
     in lib.mkIf cfg.enable {
+        # Create user and group
+        users.users.${cfg.user} = {
+            isSystemUser = true;
+            group = cfg.group;
+            description = "Syncthing service user";
+        };
+
+        users.groups.${cfg.group} = {};
+
+        # Create root directory with appropriate permissions
         systemd.tmpfiles.rules = [
             "d ${cfg.root} 0755 ${cfg.user} ${cfg.group} - -"
         ];
