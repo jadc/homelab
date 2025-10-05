@@ -11,10 +11,9 @@
             };
 
             devices = {
-                "/data/media" = {
+                "/data" = {
                     device = "/dev/disk/by-uuid/d91b87c6-61f9-4901-99ee-efde2b36bbeb";
                     fsType = "xfs";
-                    group = "media";
                 };
             };
         };
@@ -44,6 +43,13 @@
             caddy.proxies.jellyfin = {
                 domain = "media.jad.red";
                 port = 8096;
+            };
+
+            syncthing = {
+                enable = true;
+                root = "/data/sync";
+                user = "syncthing";
+                group = "sync";
             };
         };
     };
