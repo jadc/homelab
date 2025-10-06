@@ -66,12 +66,13 @@ in
                 incomplete-dir = "${cfg.root}/incomplete";
 
                 # RPC is the API servarr services use
-                rpc-port = 9091;
-                rpc-bind-address = "127.0.0.1";  # localhost only
-                rpc-whitelist-enabled = true;
-                rpc-whitelist = "127.0.0.1";
-                rpc-host-whitelist-enabled = true;
                 rpc-authentication-required = false;
+                rpc-bind-address = "0.0.0.0";
+                rpc-host-whitelist = "192.168.*.*";
+                rpc-host-whitelist-enabled = true;
+                rpc-port = 9091;
+                rpc-whitelist = "127.0.0.1,192.168.*.*";
+                rpc-whitelist-enabled = true;
 
                 blocklist-enabled = true;
                 blocklist-url = "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz";
