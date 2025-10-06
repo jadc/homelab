@@ -42,12 +42,17 @@
 
             jellyfin = {
                 enable = true;
-                root = "${config.homelab.system.devices.data.mountPoint}/media";
                 group = "media";
             };
             caddy.proxies.jellyfin = {
                 domain = "media.jad.red";
                 port = 8096;
+            };
+
+            servarr = {
+                enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/media";
+                group = "media";
             };
 
             syncthing = {

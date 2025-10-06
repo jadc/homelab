@@ -7,12 +7,6 @@ in
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
-        # TODO: probably move to *arr config
-        root = mkOption {
-            type = types.str;
-            description = "Root directory for media";
-        };
-
         user = mkOption {
             type = types.str;
             default = name;
@@ -37,14 +31,6 @@ in
             groups.${cfg.group} = {};
         };
 
-        # Create root directory with appropriate permissions
-        # TODO: probably move to *arr config
-        systemd.tmpfiles.rules = [
-            "d ${cfg.root} 0755 ${cfg.user} ${cfg.group} - -"
-            "d ${cfg.root}/movies 0755 ${cfg.user} ${cfg.group} - -"
-            "d ${cfg.root}/shows 0755 ${cfg.user} ${cfg.group} - -"
-        ];
-
         services.jellyfin = {
             enable = true;
             openFirewall = true;
@@ -57,8 +43,5 @@ in
             jellyfin-ffmpeg
             jellyfin-web
         ];
-
-        # Open firewall for web UI on LAN
-        networking.firewall.allowedTCPPorts = [ 8096 ];
     };
 }
