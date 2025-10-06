@@ -15,6 +15,11 @@
                     mountPoint = "/data";
                     device = "/dev/disk/by-uuid/5db1a674-6c38-4956-a7ca-ae7dce2c7772";
                     fsType = "xfs";
+                    powerManagement = {
+                        enable = true;
+                        spindownTimeout = 120;
+                        apmLevel = 128;
+                    };
                 };
             };
         };

@@ -53,6 +53,26 @@ in
                     description = "User that owns the mount point";
                     default = "root";
                 };
+
+                powerManagement = {
+                    enable = mkEnableOption "power management for this device" // {
+                        default = false;
+                    };
+
+                    spindownTimeout = mkOption {
+                        type = types.nullOr types.int;
+                        description = "Spindown timeout in seconds (multiples of 5). Set to 0 to disable spindown.";
+                        default = 1200; # 20 minutes
+                        example = 600;
+                    };
+
+                    apmLevel = mkOption {
+                        type = types.nullOr types.int;
+                        description = "Advanced Power Management level (1-255). 1=max power saving, 255=max performance. 128-254 allows spindown.";
+                        default = 128;
+                        example = 128;
+                    };
+                };
             };
         });
     };
@@ -60,6 +80,7 @@ in
     config = let
         cfg = config.homelab.system.${name};
         enabled = lib.filterAttrs (name: x: x.enable) cfg;
+        powerManaged = lib.filterAttrs (name: x: x.enable && x.powerManagement.enable) cfg;
     in {
         # Create mountPoint directory
         systemd.tmpfiles.rules = with lib;
@@ -80,5 +101,38 @@ in
                 };
             }) enabled
         );
+
+        # Power management for devices
+        systemd.services = with lib; mkMerge (
+            mapAttrsToList (name: x: {
+                "hdparm-${name}" = {
+                    description = "Power management for ${x.device}";
+                    wantedBy = [ "multi-user.target" ];
+                    after = [ "local-fs.target" ];
+                    serviceConfig = {
+                        Type = "oneshot";
+                        RemainAfterExit = true;
+                        ExecStart = let
+                            spindownSecs = if x.powerManagement.spindownTimeout != null
+                                then x.powerManagement.spindownTimeout
+                                else 0;
+                            # hdparm uses units of 5 seconds
+                            spindownUnits = toString (spindownSecs / 5);
+                            apmArg = if x.powerManagement.apmLevel != null
+                                then "-B ${toString x.powerManagement.apmLevel}"
+                                else "";
+                            spindownArg = if spindownSecs > 0
+                                then "-S ${spindownUnits}"
+                                else "";
+                        in "${lib.getExe config.boot.kernelPackages.hdparm} ${apmArg} ${spindownArg} ${x.device}";
+                    };
+                };
+            }) powerManaged
+        );
+
+        # Ensure hdparm is available
+        environment.systemPackages = lib.mkIf (powerManaged != {}) [
+            config.boot.kernelPackages.hdparm
+        ];
     };
 }
