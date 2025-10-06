@@ -58,6 +58,7 @@
             transmission = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/torrents";
+                user = "torrent";
                 group = "media";
             };
 
