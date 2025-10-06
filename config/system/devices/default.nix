@@ -127,7 +127,7 @@ in
                             spindownArg = if spindownSecs > 0
                                 then "-S ${spindownUnits}"
                                 else "";
-                        in "${pkgs.hdparm} ${apmArg} ${spindownArg} ${x.device}";
+                        in "${pkgs.hdparm}/bin/hdparm ${apmArg} ${spindownArg} ${x.device}";
                     };
                 };
             }) powerManaged
