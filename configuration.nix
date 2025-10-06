@@ -55,6 +55,12 @@
                 group = "media";
             };
 
+            transmission = {
+                enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/torrents";
+                group = "media";
+            };
+
             syncthing = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/sync";
