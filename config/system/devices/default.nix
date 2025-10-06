@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
     name = "devices";
@@ -102,6 +102,9 @@ in
             }) enabled
         );
 
+        # Ensure hdparm is available
+        environment.systemPackages = with pkgs; lib.mkIf (powerManaged != {}) [ hdparm ];
+
         # Power management for devices
         systemd.services = with lib; mkMerge (
             mapAttrsToList (name: x: {
@@ -124,15 +127,11 @@ in
                             spindownArg = if spindownSecs > 0
                                 then "-S ${spindownUnits}"
                                 else "";
-                        in "${lib.getExe config.boot.kernelPackages.hdparm} ${apmArg} ${spindownArg} ${x.device}";
+                        in "${pkgs.hdparm} ${apmArg} ${spindownArg} ${x.device}";
                     };
                 };
             }) powerManaged
         );
 
-        # Ensure hdparm is available
-        environment.systemPackages = lib.mkIf (powerManaged != {}) [
-            config.boot.kernelPackages.hdparm
-        ];
     };
 }
