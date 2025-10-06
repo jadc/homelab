@@ -76,12 +76,6 @@ in
                         group = cfg.group;
                     };
                 })
-                (lib.mkIf cfg.prowlarr.enable {
-                    ${cfg.prowlarr.user} = {
-                        isSystemUser = true;
-                        group = cfg.group;
-                    };
-                })
                 (lib.mkIf cfg.bazarr.enable {
                     ${cfg.bazarr.user} = {
                         isSystemUser = true;
