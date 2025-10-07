@@ -42,12 +42,26 @@
 
             jellyfin = {
                 enable = true;
-                root = "${config.homelab.system.devices.data.mountPoint}/media";
                 group = "media";
             };
             caddy.proxies.jellyfin = {
                 domain = "media.jad.red";
                 port = 8096;
+            };
+
+            servarr = {
+                enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/media";
+                group = "media";
+                sonarr.apiKeyFile = "${inputs.secrets}/sonarr.key";
+                radarr.apiKeyFile = "${inputs.secrets}/radarr.key";
+            };
+
+            transmission = {
+                enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/torrents";
+                user = "torrent";
+                group = "media";
             };
 
             syncthing = {
