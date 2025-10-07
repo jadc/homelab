@@ -237,10 +237,6 @@ in
 
                     custom_formats = [
                         {
-                            trash_ids = [];
-                            assign_scores_to = [ { name = "UHD Bluray + WEB"; } ];
-                        }
-                        {
                             trash_ids = [
                                 "9f6cbff8cfe4ebbc1bde14c7b7bec0de" # IMAX Enhanced
                             ];
