@@ -53,6 +53,8 @@
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/media";
                 group = "media";
+                sonarr.apiKeyFile = "${inputs.secrets}/sonarr.key";
+                radarr.apiKeyFile = "${inputs.secrets}/radarr.key";
             };
 
             transmission = {
