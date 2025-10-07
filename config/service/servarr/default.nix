@@ -46,6 +46,12 @@ in
             };
         };
 
+        flaresolverr = {
+            enable = mkEnableOption "Flaresolverr" // {
+                default = cfg.enable;
+            };
+        };
+
         bazarr = {
             enable = mkEnableOption "Bazarr" // {
                 default = cfg.enable;
@@ -110,6 +116,12 @@ in
 
         # Prowlarr configuration
         services.prowlarr = lib.mkIf cfg.prowlarr.enable {
+            enable = true;
+            openFirewall = true;
+        };
+
+        # Prowlarr configuration
+        services.flaresolverr = lib.mkIf cfg.flaresolverr.enable {
             enable = true;
             openFirewall = true;
         };
