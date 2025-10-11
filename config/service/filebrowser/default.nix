@@ -29,7 +29,7 @@ in
 
     config = lib.mkIf cfg.enable {
         # Copied from unstable, remove when in stable
-        import = [ ./filebrowser.nix ];
+        imports = [ ./filebrowser.nix ];
 
         # Create user and group
         users = {
