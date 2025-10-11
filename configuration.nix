@@ -68,6 +68,7 @@
             syncthing = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/sync";
+                group = "sync";
             };
 
             filebrowser = {
