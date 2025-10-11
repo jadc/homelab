@@ -68,6 +68,16 @@
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/sync";
             };
+
+            filebrowser = {
+                enable = true;
+                group = "sync";
+                port = 8099;
+            };
+            caddy.proxies.filebrowser = {
+                domain = "files.jad.red";
+                port = 8099;
+            };
         };
     };
 }
