@@ -5,11 +5,6 @@ let
     cfg = config.homelab.service.${name};
 in
 {
-    # TODO: remove when services.filebrowser in stable
-    imports = let u = import <nixpkgs-unstable> {}; in [
-        "${u.path}/nixos/modules/services/web-apps/filebrowser.nix"
-    ];
-
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
