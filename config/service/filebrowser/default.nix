@@ -28,6 +28,11 @@ in
             default = 8080;
             description = "Port on which File Browser listens";
         };
+
+        root = mkOption {
+            type = types.str;
+            description = "Root directory that FileBrowser can access";
+        };
     };
 
    config = lib.mkIf cfg.enable {
@@ -45,7 +50,10 @@ in
             openFirewall = true;
             user = cfg.user;
             group = cfg.group;
-            settings.port = cfg.port;
+            settings = {
+                root = cfg.root;
+                port = cfg.port;
+            };
         };
     };
 }
