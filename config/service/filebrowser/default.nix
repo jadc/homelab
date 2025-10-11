@@ -5,6 +5,11 @@ let
     cfg = config.homelab.service.${name};
 in
 {
+    # TODO: remove when services.filebrowser in stable
+    imports = let u = import <nixpkgs-unstable> {}; in [
+        "${u.path}/nixos/modules/services/web-apps/filebrowser.nix"
+    ];
+
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
@@ -42,9 +47,7 @@ in
             openFirewall = true;
             user = cfg.user;
             group = cfg.group;
-            settings = {
-                port = cfg.port;
-            };
+            settings.port = cfg.port;
         };
     };
 }
