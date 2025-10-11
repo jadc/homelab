@@ -72,6 +72,7 @@
 
             filebrowser = {
                 enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/sync";
                 group = "sync";
                 port = 8099;
             };
