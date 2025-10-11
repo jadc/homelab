@@ -5,9 +5,6 @@ let
     cfg = config.homelab.service.${name};
 in
 {
-    # Copied from unstable, remove when in stable
-    import = [ ./filebrowser.nix ];
-
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
@@ -31,6 +28,9 @@ in
     };
 
     config = lib.mkIf cfg.enable {
+        # Copied from unstable, remove when in stable
+        import = [ ./filebrowser.nix ];
+
         # Create user and group
         users = {
             users.${cfg.user} = {
