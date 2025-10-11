@@ -178,7 +178,7 @@ in
             enable = true;
             user = cfg.bazarr.user;
             group = cfg.group;
-            port = cfg.bazarr.port;
+            listenPort = cfg.bazarr.port;
         };
 
         # Recyclarr configuration
