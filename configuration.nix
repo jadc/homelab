@@ -43,6 +43,7 @@
             jellyfin = {
                 enable = true;
                 group = "media";
+                port = 8096;
             };
             caddy.proxies.jellyfin = {
                 domain = "media.jad.red";

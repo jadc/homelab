@@ -26,6 +26,12 @@ in
             example = "/data/downloads";
         };
 
+        port = mkOption {
+            type = types.port;
+            default = 9091;
+            description = "Port on which Transmission RPC listens";
+        };
+
         settings = mkOption {
             type = types.attrs;
             default = {};
@@ -70,7 +76,7 @@ in
                 rpc-bind-address = "0.0.0.0";
                 rpc-host-whitelist = "192.168.*.*";
                 rpc-host-whitelist-enabled = true;
-                rpc-port = 9091;
+                rpc-port = cfg.port;
                 rpc-whitelist = "127.0.0.1,192.168.*.*";
                 rpc-whitelist-enabled = true;
 

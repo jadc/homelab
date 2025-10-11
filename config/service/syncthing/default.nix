@@ -24,6 +24,12 @@ in
             default = name;
             description = "Group under which Syncthing runs";
         };
+
+        port = mkOption {
+            type = types.port;
+            default = 8384;
+            description = "Port on which Syncthing web UI listens";
+        };
     };
 
     config = let
@@ -57,10 +63,10 @@ in
             settings.options.urAccepted = -1;
 
             # Allow WebUI access on LAN
-            guiAddress = "0.0.0.0:8384";
+            guiAddress = "0.0.0.0:${toString cfg.port}";
         };
 
         # Open firewall for web UI
-        networking.firewall.allowedTCPPorts = [ 8384 ];
+        networking.firewall.allowedTCPPorts = [ cfg.port ];
     };
 }
