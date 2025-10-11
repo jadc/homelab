@@ -46,7 +46,7 @@ in
 
         # Create root directory with appropriate permissions
         systemd.tmpfiles.rules = [
-            "d ${cfg.root} 0755 ${cfg.user} ${cfg.group} - -"
+            "d ${cfg.root} 0775 ${cfg.user} ${cfg.group} - -"
         ];
 
         # Configure service
