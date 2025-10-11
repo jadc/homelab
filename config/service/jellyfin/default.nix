@@ -18,6 +18,12 @@ in
             default = name;
             description = "Group under which Jellyfin runs";
         };
+
+        port = mkOption {
+            type = types.port;
+            default = 8096;
+            description = "Port on which Jellyfin listens";
+        };
     };
     config = let
         cfg = config.homelab.service.${name};

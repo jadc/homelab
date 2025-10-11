@@ -28,6 +28,11 @@ in
                 type = types.str;
                 default = "sonarr";
             };
+            port = mkOption {
+                type = types.port;
+                default = 8989;
+                description = "Port on which Sonarr listens";
+            };
             apiKeyFile = mkOption {
                 type = types.str;
                 description = "Path to API key file for Sonarr";
@@ -42,6 +47,11 @@ in
                 type = types.str;
                 default = "radarr";
             };
+            port = mkOption {
+                type = types.port;
+                default = 7878;
+                description = "Port on which Radarr listens";
+            };
             apiKeyFile = mkOption {
                 type = types.str;
                 description = "Path to API key file for Radarr";
@@ -52,11 +62,21 @@ in
             enable = mkEnableOption "Prowlarr" // {
                 default = cfg.enable;
             };
+            port = mkOption {
+                type = types.port;
+                default = 9696;
+                description = "Port on which Prowlarr listens";
+            };
         };
 
         flaresolverr = {
             enable = mkEnableOption "Flaresolverr" // {
                 default = cfg.prowlarr.enable;
+            };
+            port = mkOption {
+                type = types.port;
+                default = 8191;
+                description = "Port on which Flaresolverr listens";
             };
         };
 
@@ -77,6 +97,11 @@ in
             user = mkOption {
                 type = types.str;
                 default = "bazarr";
+            };
+            port = mkOption {
+                type = types.port;
+                default = 6767;
+                description = "Port on which Bazarr listens";
             };
         };
     };
@@ -122,6 +147,7 @@ in
             openFirewall = true;
             user = cfg.sonarr.user;
             group = cfg.group;
+            port = cfg.sonarr.port;
         };
 
         # Radarr configuration
@@ -130,18 +156,21 @@ in
             openFirewall = true;
             user = cfg.radarr.user;
             group = cfg.group;
+            port = cfg.radarr.port;
         };
 
         # Prowlarr configuration
         services.prowlarr = lib.mkIf cfg.prowlarr.enable {
             enable = true;
             openFirewall = true;
+            port = cfg.prowlarr.port;
         };
 
-        # Prowlarr configuration
+        # Flaresolverr configuration
         services.flaresolverr = lib.mkIf cfg.flaresolverr.enable {
             enable = true;
             openFirewall = true;
+            port = cfg.flaresolverr.port;
         };
 
         # Bazarr configuration
@@ -149,6 +178,7 @@ in
             enable = true;
             user = cfg.bazarr.user;
             group = cfg.group;
+            port = cfg.bazarr.port;
         };
 
         # Recyclarr configuration
@@ -161,7 +191,7 @@ in
             configuration = {
                 sonarr.web-1080p-v4 = {
                     api_key._secret = "/run/credentials/recyclarr.service/sonarr-api_key";
-                    base_url = "http://localhost:8989";
+                    base_url = "http://localhost:${toString cfg.sonarr.port}";
                     delete_old_custom_formats = true;
                     replace_existing_custom_formats = true;
 
@@ -223,7 +253,7 @@ in
 
                 radarr.uhd-bluray-web = {
                     api_key._secret = "/run/credentials/recyclarr.service/radarr-api_key";
-                    base_url = "http://localhost:7878";
+                    base_url = "http://localhost:${toString cfg.radarr.port}";
                     delete_old_custom_formats = true;
                     replace_existing_custom_formats = true;
 
@@ -265,7 +295,7 @@ in
 
                 sonarr.anime = {
                     api_key._secret = "/run/credentials/recyclarr.service/sonarr-api_key";
-                    base_url = "http://localhost:8989";
+                    base_url = "http://localhost:${toString cfg.sonarr.port}";
                     delete_old_custom_formats = true;
                     replace_existing_custom_formats = true;
 
@@ -278,7 +308,7 @@ in
 
                 radarr.anime = {
                     api_key._secret = "/run/credentials/recyclarr.service/radarr-api_key";
-                    base_url = "http://localhost:7878";
+                    base_url = "http://localhost:${toString cfg.radarr.port}";
                     delete_old_custom_formats = true;
                     replace_existing_custom_formats = true;
 
