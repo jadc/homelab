@@ -81,6 +81,17 @@
                 domain = "files.jad.red";
                 port = 8099;
             };
+
+            immich = {
+                enable = true;
+                root = "${config.homelab.system.devices.data.mountPoint}/gallery";
+                group = "gallery";
+                port = 2283;
+            };
+            caddy.proxies.immich = {
+                domain = "gallery.jad.red";
+                port = 2283;
+            };
         };
     };
 }
