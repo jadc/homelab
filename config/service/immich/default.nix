@@ -51,13 +51,12 @@ in
         services.immich = {
             enable = true;
 
+            mediaLocation = cfg.root;
             openFirewall = true;
             port = cfg.port;
             user = cfg.user;
             database.user = cfg.user;
             group = cfg.group;
-
-            machine-learning.enable = false;
         };
     };
 }
