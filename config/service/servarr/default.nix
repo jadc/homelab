@@ -147,7 +147,7 @@ in
             openFirewall = true;
             user = cfg.sonarr.user;
             group = cfg.group;
-            port = cfg.sonarr.port;
+            settings.server.port = cfg.sonarr.port;
         };
 
         # Radarr configuration
@@ -156,7 +156,7 @@ in
             openFirewall = true;
             user = cfg.radarr.user;
             group = cfg.group;
-            port = cfg.radarr.port;
+            settings.server.port = cfg.radarr.port;
         };
 
         # Prowlarr configuration
