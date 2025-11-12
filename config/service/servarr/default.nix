@@ -163,7 +163,7 @@ in
         services.prowlarr = lib.mkIf cfg.prowlarr.enable {
             enable = true;
             openFirewall = true;
-            port = cfg.prowlarr.port;
+            settings.server.port = cfg.prowlarr.port;
         };
 
         # Flaresolverr configuration
