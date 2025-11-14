@@ -70,17 +70,14 @@ in
         homelab.service.caddy.proxies.${name} = lib.mkIf (cfg.domain != null) {
             domain = cfg.domain;
             port = cfg.port;
-            reverseProxyConfig = "flush_interval -1";
+
+            # Required to support syncing large media
+            reverseProxyConfig = ''
+                flush_interval -1
+            '';
             extraConfig = ''
                 request_body {
                     max_size 50GB
-                }
-
-                timeouts {
-                    read_body 10m
-                    read_header 10m
-                    write 10m
-                    idle 10m
                 }
             '';
         };
