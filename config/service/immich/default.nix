@@ -30,6 +30,13 @@ in
             default = 2283;
             description = "Port on which Immich listens";
         };
+
+        domain = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Domain name for Caddy reverse proxy";
+            example = "photos.example.com";
+        };
     };
     config = let
         cfg = config.homelab.service.${name};
@@ -57,6 +64,25 @@ in
             user = cfg.user;
             database.user = cfg.user;
             group = cfg.group;
+        };
+
+        # Configure Caddy reverse proxy if domain is specified
+        homelab.service.caddy.proxies.${name} = lib.mkIf (cfg.domain != null) {
+            domain = cfg.domain;
+            port = cfg.port;
+            reverseProxyConfig = "flush_interval -1";
+            extraConfig = ''
+                request_body {
+                    max_size 50GB
+                }
+
+                timeouts {
+                    read_body 10m
+                    read_header 10m
+                    write 10m
+                    idle 10m
+                }
+            '';
         };
     };
 }
