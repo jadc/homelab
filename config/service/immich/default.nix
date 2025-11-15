@@ -53,6 +53,7 @@ in
 
             mediaLocation = cfg.root;
             openFirewall = true;
+            host = "0.0.0.0";
             port = cfg.port;
             user = cfg.user;
             database.user = cfg.user;
