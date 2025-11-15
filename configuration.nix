@@ -87,7 +87,6 @@
                 root = "${config.homelab.system.devices.data.mountPoint}/gallery";
                 group = "gallery";
                 port = 2283;
-                domain = "gallery.jad.red";
             };
         };
     };
