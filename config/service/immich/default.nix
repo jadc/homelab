@@ -59,5 +59,14 @@ in
             database.user = cfg.user;
             group = cfg.group;
         };
+
+        # Override systemd service config to allow group rwx permissions
+        # Default UMask is 0077 (user-only), we change to 0007 (user+group)
+        systemd.services.immich-server.serviceConfig.UMask = lib.mkForce "0007";
+        systemd.services.immich-machine-learning.serviceConfig.UMask = lib.mkForce "0007";
+
+        # Override tmpfiles mode to allow group rwx permissions
+        # Default mode is 0700 (user-only), we change to 0770 (user+group)
+        systemd.tmpfiles.settings.immich."${cfg.root}".e.mode = lib.mkForce "0770";
     };
 }
