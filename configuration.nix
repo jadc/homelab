@@ -42,7 +42,7 @@
 
             jellyfin = {
                 enable = true;
-                group = "media";
+                group = config.homelab.service.servarr.group;
                 port = 8096;
             };
             caddy.proxies.jellyfin = {
@@ -62,7 +62,7 @@
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/torrents";
                 user = "torrent";
-                group = "media";
+                group = config.homelab.service.servarr.group;
             };
 
             syncthing = {
@@ -74,7 +74,7 @@
             filebrowser = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/sync";
-                group = "sync";
+                group = config.homelab.service.syncthing.group;
                 port = 8099;
             };
             caddy.proxies.filebrowser = {
@@ -85,12 +85,7 @@
             immich = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/gallery";
-                group = "gallery";
-                port = 2283;
-            };
-            caddy.proxies.immich = {
-                domain = "gallery.jad.red";
-                port = 2283;
+                group = config.homelab.service.syncthing.group;
             };
         };
     };

@@ -36,10 +36,16 @@ in
                         example = 8080;
                     };
 
+                    reverseProxyConfig = mkOption {
+                        type = types.lines;
+                        default = "";
+                        description = "Extra configuration inside the reverse_proxy block";
+                    };
+
                     extraConfig = mkOption {
                         type = types.lines;
                         default = "";
-                        description = "Extra configuration for this proxy";
+                        description = "Extra configuration for this virtual host (outside reverse_proxy)";
                     };
                 };
             });
@@ -70,9 +76,11 @@ in
                                 ${lib.optionalString (certFile != null && keyFile != null)
                                 "tls ${certFile} ${keyFile}"}
 
-                            reverse_proxy localhost:${toString proxyCfg.port}${
-                                lib.optionalString (proxyCfg.extraConfig != "") " {\n${proxyCfg.extraConfig}\n}"
-                            }
+                                reverse_proxy localhost:${toString proxyCfg.port} {
+                                    ${proxyCfg.reverseProxyConfig}
+                                }
+
+                                ${proxyCfg.extraConfig}
                             '';
                         };
                     }) cfg.proxies
