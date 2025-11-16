@@ -85,7 +85,7 @@
             immich = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/gallery";
-                group = "gallery";
+                group = "sync";
                 port = 2283;
             };
         };
