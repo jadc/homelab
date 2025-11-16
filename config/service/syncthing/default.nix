@@ -64,6 +64,10 @@ in
 
             # Allow WebUI access on LAN
             guiAddress = "0.0.0.0:${toString cfg.port}";
+
+            # Disable declarative sync folder config
+            overrideDevices = false;
+            overrideFolders = false;
         };
 
         # Open firewall for web UI
