@@ -51,6 +51,7 @@ in
             user = cfg.user;
             group = cfg.group;
             settings = {
+                address = "0.0.0.0";
                 root = cfg.root;
                 port = cfg.port;
             };

@@ -77,10 +77,6 @@
                 group = config.homelab.service.syncthing.group;
                 port = 8099;
             };
-            caddy.proxies.filebrowser = {
-                domain = "files.jad.red";
-                port = 8099;
-            };
 
             immich = {
                 enable = true;
