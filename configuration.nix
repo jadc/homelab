@@ -83,6 +83,16 @@
                 root = "${config.homelab.system.devices.data.mountPoint}/gallery";
                 group = config.homelab.service.syncthing.group;
             };
+
+            samba = {
+                enable = true;
+
+                shares = {
+                    shared = {
+                        root = "${config.homelab.system.devices.data.mountPoint}/shared";
+                    };
+                };
+            };
         };
     };
 }
