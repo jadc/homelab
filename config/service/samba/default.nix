@@ -55,6 +55,24 @@ in
         };
         users.groups.${cfg.group} = {};
 
+        # Set up default Samba user credentials (so modern Windows can connect)
+        systemd.services.samba-setup-credentials = 
+            let name = config.networking.hostName;
+        in {
+            description = "Set up Samba user credentials";
+            wantedBy = [ "samba-smbd.service" ];
+            before = [ "samba-smbd.service" ];
+            serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+            };
+            script = ''
+                (echo "${name}"; echo "${name}") | \
+                ${config.services.samba.package}/bin/smbpasswd -a -s ${name} || true
+                ${config.services.samba.package}/bin/smbpasswd    -e ${name} || true
+            '';
+        };
+
         # Create share directories if they do not exist
         systemd.tmpfiles.rules = lib.mapAttrsToList (name: shareCfg:
             "d ${shareCfg.root} 0775 ${cfg.user} ${cfg.group} - -"
