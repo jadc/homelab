@@ -3,6 +3,7 @@
 let
     name = "samba";
     cfg = config.homelab.service.${name};
+    hostName = config.networking.hostName;
 in
 {
     options.homelab.service.${name} = with lib; {
@@ -56,9 +57,7 @@ in
         users.groups.${cfg.group} = {};
 
         # Set up default Samba user credentials (so modern Windows can connect)
-        systemd.services.samba-setup-credentials = 
-            let name = config.networking.hostName;
-        in {
+        systemd.services.samba-setup-credentials = {
             description = "Set up Samba user credentials";
             wantedBy = [ "samba-smbd.service" ];
             before = [ "samba-smbd.service" ];
@@ -67,9 +66,9 @@ in
                 RemainAfterExit = true;
             };
             script = ''
-                (echo "${name}"; echo "${name}") | \
-                ${config.services.samba.package}/bin/smbpasswd -a -s ${name} || true
-                ${config.services.samba.package}/bin/smbpasswd    -e ${name} || true
+                (echo "${hostName}"; echo "${hostName}") | \
+                ${config.services.samba.package}/bin/smbpasswd -a -s ${hostName} || true
+                ${config.services.samba.package}/bin/smbpasswd    -e ${hostName} || true
             '';
         };
 
@@ -86,8 +85,8 @@ in
                 # Configure global settings shared amongst all Samba shares
                 global = {
                     workgroup = cfg.workgroup;
-                    "server string" = config.networking.hostName;
-                    "netbios name" = config.networking.hostName;
+                    "server string" = hostName;
+                    "netbios name" = hostName;
 
                     # Allow passwordless guest access
                     security = "user";
@@ -166,6 +165,8 @@ in
 
                     # Enable guest access (no password required)
                     "guest ok" = "yes";
+                    # Allow the default user to authenticate
+                    "valid users" = hostName;
 
                     # Read/write access
                     browseable = "yes";
