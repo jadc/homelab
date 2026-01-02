@@ -68,8 +68,8 @@ in
                 # Configure global settings shared amongst all Samba shares
                 global = {
                     workgroup = cfg.workgroup;
-                    "server string" = config.networking.hostname;
-                    "netbios name" = config.networking.hostname;
+                    "server string" = config.networking.hostName;
+                    "netbios name" = config.networking.hostName;
 
                     # Allow passwordless guest access
                     security = "user";
@@ -142,7 +142,7 @@ in
                 };
 
             # Configure each Samba share
-            } // lib.mapAttrs (shareName: shareCfg: 
+            } // lib.mapAttrs (shareName: shareCfg:
                 {
                     path = shareCfg.root;
 
