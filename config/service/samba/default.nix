@@ -66,9 +66,9 @@ in
                 RemainAfterExit = true;
             };
             script = ''
-                (echo "${hostName}"; echo "${hostName}") | \
-                ${config.services.samba.package}/bin/smbpasswd -a -s ${hostName} || true
-                ${config.services.samba.package}/bin/smbpasswd    -e ${hostName} || true
+                (echo "${cfg.user}"; echo "${cfg.user}") | \
+                ${config.services.samba.package}/bin/smbpasswd -a -s ${cfg.user} || true
+                ${config.services.samba.package}/bin/smbpasswd    -e ${cfg.user} || true
             '';
         };
 
@@ -88,12 +88,8 @@ in
                     "server string" = hostName;
                     "netbios name" = hostName;
 
-                    # Allow passwordless guest access
+                    # Require user authentication
                     security = "user";
-                    # Map all users to guest account (enables passwordless access)
-                    "map to guest" = "bad user";
-                    # Use the configured user as the guest account
-                    "guest account" = cfg.user;
 
                     # Enforce SMB3 protocol
                     "server min protocol" = "SMB3";
@@ -163,10 +159,10 @@ in
                 {
                     path = shareCfg.root;
 
-                    # Enable guest access (no password required)
-                    "guest ok" = "yes";
-                    # Allow the default user to authenticate
-                    "valid users" = hostName;
+                    # Require authentication (no guest access)
+                    "guest ok" = "no";
+                    # Allow the samba user to authenticate with password
+                    "valid users" = cfg.user;
 
                     # Read/write access
                     browseable = "yes";
