@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
     name = "devices";
@@ -36,22 +36,10 @@ in
                     default = [ "defaults" ];
                 };
 
-                group = mkOption {
+                mergePoint = mkOption {
                     type = types.nullOr types.str;
-                    description = "Group that owns the mount point";
+                    description = "Path where this device should be merged with others using mergerfs";
                     default = null;
-                };
-
-                permissions = mkOption {
-                    type = types.str;
-                    description = "Permissions on the mount point";
-                    default = "755";
-                };
-
-                owner = mkOption {
-                    type = types.str;
-                    description = "User that owns the mount point";
-                    default = "root";
                 };
             };
         });
@@ -59,26 +47,55 @@ in
 
     config = let
         cfg = config.homelab.system.${name};
-        enabled = lib.filterAttrs (name: x: x.enable) cfg;
-    in {
-        # Create mountPoint directory
-        systemd.tmpfiles.rules = with lib;
-            mapAttrsToList (name: x:
-                let
-                    group = if x.group != null then x.group else "-";
-                in
-                    "d ${x.mountPoint} ${x.permissions} ${x.owner} ${group} - -"
-            ) enabled;
+        drives = lib.filterAttrs (name: x: x.enable) cfg;
+        mergePointGroups = lib.groupBy (x: x.mergePoint) (lib.filter (x: x.mergePoint != null) (lib.attrValues drives));
+    in lib.mkMerge [
+        {
+            # Create mountPoint directory for each device
+            systemd.tmpfiles.rules = with lib;
+                mapAttrsToList (name: x:
+                    "d ${x.mountPoint} 0755 root - - -"
+                ) drives;
 
-        # Mount device to mountPoint
-        fileSystems = with lib; mkMerge (
-            mapAttrsToList (name: x: {
-                ${x.mountPoint} = {
-                    device = x.device;
-                    fsType = x.fsType;
-                    options = x.options;
-                };
-            }) enabled
-        );
-    };
+            # Mount each device to its mountPoint
+            fileSystems = with lib; mkMerge (
+                mapAttrsToList (name: x: {
+                    ${x.mountPoint} = {
+                        device = x.device;
+                        fsType = x.fsType;
+                        options = x.options;
+                    };
+                }) drives
+            );
+        }
+        (lib.mkIf (mergePointGroups != {}) {
+            environment.systemPackages = [ pkgs.mergerfs ];
+
+            # Create each mergePoint directory
+            systemd.tmpfiles.rules = lib.mapAttrsToList (mergePoint: devices:
+                "d ${mergePoint} 0755 root - - -"
+            ) mergePointGroups;
+
+            # Mount each merged device to its mergePoint
+            fileSystems = lib.mkMerge (
+                lib.mapAttrsToList (mergePoint: devices: {
+                    ${mergePoint} = {
+                        device = lib.concatStringsSep ":" (map (x: x.mountPoint) devices);
+                        fsType = "fuse.mergerfs";
+                        options = [
+                            "defaults"
+                            "allow_other"
+                            "cache.files=partial"
+                            "category.create=mfs"
+                            "dropcacheonclose=true"
+                            "ignorepponrename=true"
+                            "minfreespace=10G"
+                            "moveonenospc=true"
+                            "use_ino"
+                        ];
+                    };
+                }) mergePointGroups
+            );
+        })
+    ];
 }
