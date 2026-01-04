@@ -17,6 +17,11 @@
                     fsType = "xfs";
                 };
             };
+
+            hd-idle = {
+                enable = true;
+                spindownTime = 10 * 60;
+            };
         };
 
         service = {
