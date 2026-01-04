@@ -9,7 +9,7 @@
     };
 
     outputs = { self, nixpkgs, ... } @ inputs: let
-        hostname = "homelab";
+        hostname = "chieftain";
         system = "x86_64-linux";
     in {
         nixosConfigurations = let inherit (self) outputs; in {
