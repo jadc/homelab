@@ -24,6 +24,12 @@ in
                 default = false;
             };
 
+            vfio = mkOption {
+                type = types.bool;
+                default = false;
+                description = "Enable VFIO kernel modules required for PCI passthrough";
+            };
+
             intel = mkOption {
                 type = types.bool;
                 default = false;
@@ -45,7 +51,11 @@ in
 
             # Load GPU kernel modules early in boot process
             initrd.kernelModules =
-                optionals self.flags.intel [
+                optionals self.flags.vfio [
+                    "vfio_pci"
+                    "vfio"
+                    "vfio_iommu_type1"
+                ] ++ optionals self.flags.intel [
                     "i915"           # Intel integrated graphics driver
                 ] ++ optionals self.flags.nvidia [
                     "nvidia"         # NVIDIA proprietary driver
@@ -102,6 +112,9 @@ in
                     "i915.modeset=1"
                     # Enable GuC (Graphics microController) firmware for better GPU scheduling
                     "i915.enable_guc=3"
+                    # Enable IOMMU functionality
+                    "intel_iommu=on"
+                    "iommu=pt"
                 ] ++ optionals (!self.flags.intel) [
                     # Disable Intel graphics
                     "i915.modeset=0"
@@ -111,18 +124,6 @@ in
                 ];
 
         };
-
-        # Remove NVIDIA PCI devices from the system when disabled
-        services.udev.extraRules = mkIf (!self.flags.nvidia) ''
-            # Remove NVIDIA USB xHCI Host Controller devices, if present
-            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{power/control}="auto", ATTR{remove}="1"
-            # Remove NVIDIA USB Type-C UCSI devices, if present
-            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{power/control}="auto", ATTR{remove}="1"
-            # Remove NVIDIA Audio devices, if present
-            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{power/control}="auto", ATTR{remove}="1"
-            # Remove NVIDIA VGA/3D controller devices
-            ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{power/control}="auto", ATTR{remove}="1"
-        '';
 
         services.xserver.videoDrivers = mkIf self.flags.intel [ "modesetting" ];
 
