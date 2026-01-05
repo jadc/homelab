@@ -2,6 +2,7 @@
 
 let
     name = "superuser";
+    cfg = config.homelab.system.${name};
 in
 {
     options.homelab.system.${name} = {
@@ -11,9 +12,7 @@ in
         };
     };
 
-    config = let
-        cfg = config.homelab.system.${name};
-    in {
+    config = {
         users.mutableUsers = false;
         users.users.root = {
             isSystemUser = true;
