@@ -6,6 +6,7 @@
     environment.systemPackages = with pkgs; [
         git
         htop
+        pciutils
         tmux
         vim
     ];
