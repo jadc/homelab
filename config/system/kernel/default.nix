@@ -42,6 +42,30 @@ in
 
         boot = {
             kernelPackages = self.build;
+
+            # Load GPU kernel modules early in boot process
+            initrd.kernelModules =
+                optionals self.flags.intel [
+                    "i915"           # Intel integrated graphics driver
+                ] ++ optionals self.flags.nvidia [
+                    "nvidia"         # NVIDIA proprietary driver
+                    "nvidia_drm"     # NVIDIA DRM kernel module
+                    "nvidia_modeset" # NVIDIA modesetting module
+                ];
+
+            # Blacklist GPU drivers when their respective flags are disabled
+            blacklistedKernelModules =
+                optionals (!self.flags.intel) [
+                    "i915"           # Intel integrated graphics driver
+                    "xe"             # Intel Xe graphics driver (newer GPUs)
+                ] ++ optionals (!self.flags.nvidia) [
+                    "nouveau"        # Open-source NVIDIA driver
+                    "nvidia"         # Proprietary NVIDIA driver
+                    "nvidia_drm"     # NVIDIA DRM kernel module
+                    "nvidia_modeset" # NVIDIA modesetting module
+                    "nvidia_uvm"     # NVIDIA Unified Memory module
+                ];
+
             kernelParams =
                 optionals self.flags.quiet [
                     # Report Linux to ACPI for better hardware compatibility
@@ -86,18 +110,6 @@ in
                     "nouveau.modeset=0"
                 ];
 
-            # Blacklist GPU drivers when their respective flags are disabled
-            blacklistedKernelModules =
-                optionals (!self.flags.intel) [
-                    "i915"           # Intel integrated graphics driver
-                    "xe"             # Intel Xe graphics driver (newer GPUs)
-                ] ++ optionals (!self.flags.nvidia) [
-                    "nouveau"        # Open-source NVIDIA driver
-                    "nvidia"         # Proprietary NVIDIA driver
-                    "nvidia_drm"     # NVIDIA DRM kernel module
-                    "nvidia_modeset" # NVIDIA modesetting module
-                    "nvidia_uvm"     # NVIDIA Unified Memory module
-                ];
         };
 
         # Remove NVIDIA PCI devices from the system when disabled
