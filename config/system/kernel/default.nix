@@ -122,8 +122,10 @@ in
                 vpl-gpu-rt                    # oneVPL (QSV) runtime
                 intel-compute-runtime  # OpenCL (NEO) + Level Zero for Arc/Xe
             ];
+            enable32Bit = true;  # Enable 32-bit driver support
         };
 
+        # System-wide environment variables for Intel hardware acceleration
         environment.sessionVariables = mkIf self.flags.intel {
             LIBVA_DRIVER_NAME = "iHD";     # Prefer the modern iHD backend
         };

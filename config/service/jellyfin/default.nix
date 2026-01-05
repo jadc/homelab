@@ -32,8 +32,15 @@ in
             users.${cfg.user} = {
                 isSystemUser = true;
                 group = cfg.group;
+
+                # GPU access for hardware transcoding
+                extraGroups = [ "render" "video" ];
             };
-            groups.${cfg.group} = {};
+            groups = {
+                ${cfg.group} = {};
+                render = {};
+                video = {};
+            };
         };
 
         services.jellyfin = {
