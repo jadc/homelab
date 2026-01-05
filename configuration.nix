@@ -6,6 +6,16 @@
             timeZone = "America/Edmonton";
             locale = "en_CA.UTF-8";
 
+            kernel = {
+                enable = true;
+                flags = {
+                    quiet = true;
+                    performance = true;
+                    intel = true;
+                    nvidia = false;
+                };
+            };
+
             superuser = {
                 hashedPasswordFile = "${inputs.secrets}/passwd.hash";
             };

@@ -21,9 +21,6 @@
         timeout = 0;
     };
 
-    # Fix shutdown hang
-    hardware.enableAllFirmware = true;
-
     # VM-exclusive settings
     virtualisation.vmVariant = {
         virtualisation = {
