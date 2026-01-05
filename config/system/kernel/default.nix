@@ -116,13 +116,13 @@ in
 
         hardware.graphics = mkIf self.flags.intel {
             enable = true;
+            enable32Bit = true;
             extraPackages = with pkgs; [
                 # Required for modern Intel GPUs (Xe iGPU and ARC)
                 intel-media-driver            # VA-API (iHD) userspace
                 vpl-gpu-rt                    # oneVPL (QSV) runtime
                 intel-compute-runtime  # OpenCL (NEO) + Level Zero for Arc/Xe
             ];
-            enable32Bit = true;  # Enable 32-bit driver support
         };
 
         # System-wide environment variables for Intel hardware acceleration
