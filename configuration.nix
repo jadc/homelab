@@ -9,10 +9,11 @@
             kernel = {
                 enable = true;
                 flags = {
-                    quiet = true;
-                    performance = true;
                     intel = true;
                     nvidia = false;
+                    performance = true;
+                    quiet = true;
+                    vfio = true;
                 };
             };
 
