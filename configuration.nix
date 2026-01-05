@@ -77,7 +77,7 @@
             };
 
             filebrowser = {
-                enable = true;
+                enable = false;
                 root = "${config.homelab.system.devices.data.mountPoint}/sync";
                 group = config.homelab.service.syncthing.group;
                 port = 8099;
@@ -91,14 +91,17 @@
 
             samba = {
                 enable = true;
+                group = config.homelab.service.syncthing.group;
 
                 shares = {
                     shared = {
                         root = "${config.homelab.system.devices.data.mountPoint}/shared";
+                    };
+                    vault = {
+                        root = "${config.homelab.system.devices.data.mountPoint}/sync/vault";
                     };
                 };
             };
         };
     };
 }
-

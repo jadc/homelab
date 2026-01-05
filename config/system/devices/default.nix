@@ -2,6 +2,7 @@
 
 let
     name = "devices";
+    cfg = config.homelab.system.${name};
 in
 {
     options.homelab.system.${name} = with lib; mkOption {
@@ -46,7 +47,6 @@ in
     };
 
     config = let
-        cfg = config.homelab.system.${name};
         drives = lib.filterAttrs (name: x: x.enable) cfg;
         mergePointGroups = lib.groupBy (x: x.mergePoint) (lib.filter (x: x.mergePoint != null) (lib.attrValues drives));
     in lib.mkMerge [

@@ -2,6 +2,7 @@
 
 let
     name = "wireguard";
+    cfg = config.homelab.service.${name};
 in
 {
     options.homelab.service.${name} = with lib; {
@@ -20,9 +21,7 @@ in
         };
     };
 
-    config = let
-        cfg = config.homelab.service.${name};
-    in {
+    config = {
         # Configure WireGuard interface
         networking.wireguard = {
             enable = true;
