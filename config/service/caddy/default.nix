@@ -2,6 +2,7 @@
 
 let
     name = "caddy";
+    cfg = config.homelab.service.${name};
 in
 {
     options.homelab.service.${name} = with lib; {
@@ -55,7 +56,6 @@ in
     };
 
     config = let
-        cfg = config.homelab.service.${name};
         certFile = if cfg.tls.certFile != null then toString cfg.tls.certFile else null;
         keyFile = if cfg.tls.keyFile != null then toString cfg.tls.keyFile else null;
     in lib.mkIf cfg.enable {

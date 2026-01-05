@@ -2,6 +2,7 @@
 
 let
     name = "syncthing";
+    cfg = config.homelab.service.${name};
 in
 {
     options.homelab.service.${name} = with lib; {
@@ -32,9 +33,7 @@ in
         };
     };
 
-    config = let
-        cfg = config.homelab.service.${name};
-    in lib.mkIf cfg.enable {
+    config = lib.mkIf cfg.enable {
         # Create user and group
         users = {
             users.${cfg.user} = {

@@ -2,6 +2,7 @@
 
 let
     name = "jellyfin";
+    cfg = config.homelab.service.${name};
 in
 {
     options.homelab.service.${name} = with lib; {
@@ -25,9 +26,7 @@ in
             description = "Port on which Jellyfin listens";
         };
     };
-    config = let
-        cfg = config.homelab.service.${name};
-    in lib.mkIf cfg.enable {
+    config = lib.mkIf cfg.enable {
         # Create user and group
         users = {
             users.${cfg.user} = {

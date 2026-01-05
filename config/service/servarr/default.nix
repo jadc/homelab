@@ -35,7 +35,7 @@ in
             };
             apiKeyFile = mkOption {
                 type = types.str;
-                description = "Path to API key file for Sonarr";
+                description = "Path to Sonarr API key file for Recyclarr; must be manually updated";
             };
         };
 
@@ -54,7 +54,7 @@ in
             };
             apiKeyFile = mkOption {
                 type = types.str;
-                description = "Path to API key file for Radarr";
+                description = "Path to Radarr API key file for Recyclarr; must be manually updated";
             };
         };
 
