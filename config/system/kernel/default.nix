@@ -25,9 +25,9 @@ in
             };
 
             vfio = mkOption {
-                type = types.bool;
-                default = false;
-                description = "Enable VFIO kernel modules required for PCI passthrough";
+                type = types.listOf types.str;
+                default = [];
+                description = "Enable VFIO kernel modules and specify PCI device IDs to passthrough";
             };
 
             intel = mkOption {
@@ -51,7 +51,7 @@ in
 
             # Load GPU kernel modules early in boot process
             initrd.kernelModules =
-                optionals self.flags.vfio [
+                optionals (self.flags.vfio != []) [
                     "vfio_pci"
                     "vfio"
                     "vfio_iommu_type1"
@@ -107,6 +107,9 @@ in
                     "transparent_hugepage=madvise"
                     # Disable NUMA balancing for better performance on single-node systems
                     "numa_balancing=disable"
+                ] ++ optionals (self.flags.vfio != []) [
+                    # Specify PCI device IDs for VFIO passthrough
+                    "vfio-pci.ids=${lib.concatStringsSep "," self.flags.vfio}"
                 ] ++ optionals self.flags.intel [
                     # Enable kernel mode-setting for Intel graphics (required for hardware transcoding)
                     "i915.modeset=1"
