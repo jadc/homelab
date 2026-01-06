@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-    name = "qemu";
+    name = "vm";
     cfg = config.homelab.service.${name};
 in
 {
@@ -10,7 +10,15 @@ in
     };
 
     config = lib.mkIf cfg.enable {
-        programs.virt-manager.enable = true;
+        environment.systemPackages = with pkgs; [
+          spice
+          spice-gtk
+          spice-protocol
+          win-spice
+          win-virtio
+        ];
+
+        services.spice-vdagentd.enable = true;
         virtualisation.spiceUSBRedirection.enable = true;
         virtualisation.libvirtd = {
             enable = true;
@@ -20,7 +28,7 @@ in
                 swtpm.enable = true;
                 ovmf = {
                     enable = true;
-                    packages = [(pkgs.OVMF.override {
+                    packages = [(pkgs.OVMFFull.override {
                         secureBoot = true;
                         tpmSupport = true;
                     }).fd];
