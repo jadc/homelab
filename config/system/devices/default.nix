@@ -51,6 +51,9 @@ in
         mergePointGroups = lib.groupBy (x: x.mergePoint) (lib.filter (x: x.mergePoint != null) (lib.attrValues drives));
     in lib.mkMerge [
         {
+            # Enable TRIM for SSDs
+            services.fstrim.enable = true;
+
             # Create mountPoint directory for each device
             systemd.tmpfiles.rules = with lib;
                 mapAttrsToList (name: x:
