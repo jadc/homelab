@@ -3,7 +3,9 @@
         enable = true;
         settings = {
             PermitRootLogin = "yes";
-            ListenAddress = [ "0.0.0.0" ];
+            listenAddresses = [
+                { addr = "0.0.0.0"; port = 22; }
+            ];
         };
     };
 }
