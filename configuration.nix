@@ -35,11 +35,16 @@
                 enable = true;
                 spindownTime = 10 * 60;
             };
+
+            bridge = {
+                enable = true;
+                interface = "eno1";
+            };
         };
 
         service = {
             wireguard = let cfg = config.homelab.service.wireguard; in {
-                interface = "eno1";
+                interface = "br0";
                 ipv4Prefix = "10.66.66";
                 ipv6Prefix = "fd42:42:42";
                 peers = [

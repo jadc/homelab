@@ -11,11 +11,11 @@ in
 
     config = lib.mkIf cfg.enable {
         environment.systemPackages = with pkgs; [
-          spice
-          spice-gtk
-          spice-protocol
-          win-spice
-          win-virtio
+            spice
+            spice-gtk
+            spice-protocol
+            win-spice
+            win-virtio
         ];
 
         services.spice-vdagentd.enable = true;
