@@ -53,6 +53,10 @@
                         publicKey = "F5dy2UCbUGr9O3Qf5VMYrg3s49qlfNL4bmYPWUWWKQo=";
                         allowedIPs = [ "${cfg.ipv4Prefix}.2/32" "${cfg.ipv6Prefix}::2/128" ];
                     }
+                    {
+                        publicKey = "TBNNrmTvDnyR2L0BDoaUImsLetYX+KiYZgZUwYGjKVg=";
+                        allowedIPs = [ "${cfg.ipv4Prefix}.3/32" "${cfg.ipv6Prefix}::3/128" ];
+                    }
                 ];
                 port = 443;
                 privateKeyFile = "${inputs.secrets}/wireguard-private.key";
