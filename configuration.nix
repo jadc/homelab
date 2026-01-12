@@ -38,7 +38,8 @@
 
             bridge = {
                 enable = true;
-                interface = "eno1";
+                interface = "enp3s0";
+                macAddress = "d8:bb:c1:0d:74:04";
             };
         };
 
