@@ -129,11 +129,6 @@
             vm = {
                 enable = true;
             };
-
-            wol = {
-                enable = true;
-                command = "virsh start win11";
-            };
         };
     };
 }
