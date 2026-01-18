@@ -35,5 +35,11 @@ in
                 };
             };
         };
+
+        # Start VM when receiving WoL packet
+        homelab.service.wol = {
+            enable = true;
+            command = "${pkgs.libvirt}/bin/virsh start win11";
+        };
     };
 }
