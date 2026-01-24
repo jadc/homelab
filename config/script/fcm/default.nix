@@ -31,7 +31,7 @@ let
             owner = "qwer-lives";
             repo = "instarec";
             rev = "main";
-            hash = "";
+            hash = "sha256-GdRb5XvOFvNJYCUC37aPV8W352trc63IZ5xiMxE8Bo0=";
         };
         build-system = with pkgs.python3Packages; [
             setuptools
