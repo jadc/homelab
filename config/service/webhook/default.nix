@@ -21,8 +21,8 @@ in
         };
 
         hooks = mkOption {
-            type = types.listOf types.attrs;
-            default = [];
+            type = types.attrsOf types.attrs;
+            default = {};
             description = "Webhook hooks configuration";
         };
     };
