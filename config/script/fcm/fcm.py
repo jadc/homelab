@@ -93,6 +93,7 @@ def main():
         sender = USERNAMES.get(sender_id)
 
     if sender == None:
+        print("Missing username: " + str(data))
         return
 
     # Currently, only detect lives
