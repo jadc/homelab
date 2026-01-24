@@ -64,8 +64,10 @@ def record(username: str, name: str, timestamp: str):
         }],
     })
 
+    dt = datetime.fromtimestamp(int(timestamp) / 1000, tz=timezone.utc)
+
     # Create output directory
-    folder = Path(OUTPUT_DIR) / f"{timestamp}_{username}"
+    folder = Path(OUTPUT_DIR) / f"{username}_{dt.strftime('%Y-%m-%d')}_{timestamp}"
     folder.mkdir(parents=True, exist_ok=True)
 
     # Record the livestream, mux into mp4
@@ -78,7 +80,6 @@ def record(username: str, name: str, timestamp: str):
 
     # Create metadata.txt
     metadata = folder / "metadata.txt"
-    dt = datetime.fromtimestamp(int(timestamp) / 1000, tz=timezone.utc)
     with metadata.open("w") as f:
         f.write(f"{name} @{username} IG Live ({dt.strftime('%-m/%d/%y')})\n")
         f.write(f"https://instagram.com/{username} on {dt.strftime('%b. %-d, %Y at %-I:%M:%S %p UTC')}\n")
