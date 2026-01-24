@@ -4,12 +4,17 @@ let
     instagrapi = pkgs.python3Packages.buildPythonPackage {
         pname = "instagrapi";
         version = "2.2.1";
+        pyproject = true;
         src = pkgs.fetchPypi {
             pname = "instagrapi";
             version = "2.2.1";
-            hash = "";
+            hash = "sha256-aau3CTbtCmU8fPlTVXuCZRrGvl8NXHWqwj9MRgQktvA=";
         };
-        propagatedBuildInputs = with pkgs.python3Packages; [
+        build-system = with pkgs.python3Packages; [
+            setuptools
+            wheel
+        ];
+        dependencies = with pkgs.python3Packages; [
             requests
             pysocks
             pydantic
@@ -21,13 +26,18 @@ let
     instarec = pkgs.python3Packages.buildPythonPackage {
         pname = "instarec";
         version = "0.0.1";
+        pyproject = true;
         src = pkgs.fetchFromGitHub {
             owner = "qwer-lives";
             repo = "instarec";
             rev = "main";
             hash = "";
         };
-        propagatedBuildInputs = with pkgs.python3Packages; [
+        build-system = with pkgs.python3Packages; [
+            setuptools
+            wheel
+        ];
+        dependencies = with pkgs.python3Packages; [
             aiohttp-socks
             aiofiles
             aiohttp
