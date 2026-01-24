@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1767051569,
-        "narHash": "sha256-0MnuWoN+n1UYaGBIpqpPs9I9ZHW4kynits4mrnh1Pk4=",
+        "lastModified": 1767313136,
+        "narHash": "sha256-16KkgfdYqjaeRGBaYsNrhPRRENs0qzkQVUooNHtoy2w=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "40ee5e1944bebdd128f9fbada44faefddfde29bd",
+        "rev": "ac62194c3917d5f474c1a844b6fd6da2db95077d",
         "type": "github"
       },
       "original": {
@@ -25,11 +25,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1759804728,
-        "narHash": "sha256-r5IQbx3v5eB46CgfMr6uRkyWqgAtFyut5Q5fdwXkWa0=",
+        "lastModified": 1769282211,
+        "narHash": "sha256-8ooyexjghRwCIUtcV+Z/vNj9Dx5+jYdKNaxJQuk7908=",
         "ref": "refs/heads/main",
-        "rev": "56109590392b8f26341a5c6ef10505c16616b80c",
-        "revCount": 7,
+        "rev": "317b970718aacd84f6d94725bdb07a67491adb74",
+        "revCount": 8,
         "type": "git",
         "url": "ssh://git@github.com/jadc/homelab-secrets"
       },

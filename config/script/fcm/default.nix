@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 let
     instagrapi = pkgs.python3Packages.buildPythonPackage {
@@ -63,7 +63,8 @@ let
             chmod +x $out/bin/fcm
             sed -i '1i #!${python}/bin/python3' $out/bin/fcm
             wrapProgram $out/bin/fcm \
-                --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.ffmpeg python ]}
+                --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.ffmpeg python ]} \
+                --set WEBHOOK "${inputs.secrets}/webhook"
         '';
     };
 in

@@ -1,9 +1,19 @@
 import json
+import logging
+import os
 import subprocess
 import sys
+import threading
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import NoReturn
+
+logging.basicConfig(
+    filename = "/var/log/fcm.log",
+    format = "%(asctime)s %(levelname)s %(message)s",
+    level = logging.DEBUG,
+)
 
 OUTPUT_DIR = "/data/shared/lives"
 USERNAMES = {
@@ -39,12 +49,20 @@ USERNAMES = {
     #"": "homixidemeechie5",
 }
 
-def panic(e: Exception) -> NoReturn:
-    print(f"Error: {e}", file=sys.stderr)
-    sys.exit(1)
-
 def record(username: str, name: str, timestamp: str):
-    print(f"[{timestamp}] {name} (@{username}) has gone live!")
+    logging.info(f"{name} (@{username}) has gone live!")
+    send_discord({
+        "embeds": [{"title": f"{name} (@{username}) has gone live!"}],
+        "components": [{
+            "type": 1,
+            "components": [{
+                "type": 2,
+                "style": 5,
+                "label": "Watch",
+                "url": f"https://instagram.com/{username}/live",
+            }],
+        }],
+    })
 
     # Create output directory
     folder = Path(OUTPUT_DIR) / f"{timestamp}_{username}"
@@ -52,7 +70,8 @@ def record(username: str, name: str, timestamp: str):
 
     # Record the livestream, mux into mp4
     output = folder / f"{timestamp}.mp4"
-    proc = subprocess.Popen(["instarec", username, str(output)])
+    log_file = (folder / "instarec.log").open("w")
+    proc = subprocess.Popen(["instarec", username, str(output)], stdout=log_file, stderr=subprocess.STDOUT)
 
     # Create metadata.txt
     metadata = folder / "metadata.txt"
@@ -64,21 +83,26 @@ def record(username: str, name: str, timestamp: str):
 
     # Block until recording is complete
     proc.wait()
+    log_file.close()
+    logging.info(f"{name} (@{username}) has ended their live.")
+    send_discord({
+        "embeds": [{"title": f"{name} (@{username}) has ended their live."}]
+    })
 
     # TODO: upload to YouTube
-    print(f"Completed recording of {name} (@{username})")
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: fcm \"<JSON string>\"", file=sys.stderr)
+        logging.error("Usage: fcm \"<JSON string>\"")
         sys.exit(1)
 
     try:
         data = json.loads(sys.argv[1])
+        logging.debug(str(data))
     except json.JSONDecodeError as e:
         panic(e)
 
-    if data.get("anapp") != "Instagram":
+    if data == None or data.get("anapp") != "Instagram":
         return
 
     # Get notification sender's username
@@ -93,7 +117,7 @@ def main():
         sender = USERNAMES.get(sender_id)
 
     if sender == None:
-        print("Missing username: " + str(data))
+        logging.warning("Missing username")
         return
 
     # Currently, only detect lives
@@ -101,7 +125,26 @@ def main():
         case "Live now":
             record(sender, data.get("antitle"), data.get("anwhentime"))
         case _:
-            print("Unhandled message: " + str(data))
+            logging.debug("Unhandled message")
+
+def send_discord(payload: dict):
+    webhook_path = os.environ.get("WEBHOOK")
+    if not webhook_path:
+        logging.error("WEBHOOK environment variable not set")
+        return
+
+    def send():
+        with open(webhook_path) as f:
+            webhook_url = f.read().strip()
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(webhook_url, data=data, headers={"Content-Type": "application/json"})
+        urllib.request.urlopen(req)
+
+    threading.Thread(target=send, daemon=True).start()
+
+def panic(e: Exception) -> NoReturn:
+    logging.error(f"Error: {e}")
+    sys.exit(1)
 
 if __name__ == "__main__":
     main()

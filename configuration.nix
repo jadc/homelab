@@ -137,7 +137,7 @@
                         execute-command = "${pkgs.bash}/bin/bash";
                         pass-arguments-to-command = [
                             { source = "string"; name = "-c"; }
-                            { source = "string"; name = "printf '%s\\0' \"$0\" | xargs -0 /run/current-system/sw/bin/fcm 2>&1 | tee -a /var/log/fcm.log"; }
+                            { source = "string"; name = "printf '%s\\0' \"$0\" | xargs -0 /run/current-system/sw/bin/fcm"; }
                             { source = "entire-payload"; }
                         ];
                     };
