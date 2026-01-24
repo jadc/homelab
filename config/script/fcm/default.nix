@@ -21,6 +21,7 @@ let
             pydantic
             moviepy
             pycryptodomex
+            platformdirs
         ];
     };
 
