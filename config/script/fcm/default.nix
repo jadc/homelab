@@ -5,6 +5,7 @@ let
         pname = "instagrapi";
         version = "2.2.1";
         pyproject = true;
+        pythonRelaxDeps = true;
         src = pkgs.fetchPypi {
             pname = "instagrapi";
             version = "2.2.1";
@@ -27,6 +28,7 @@ let
         pname = "instarec";
         version = "0.0.1";
         pyproject = true;
+        pythonRelaxDeps = true;
         src = pkgs.fetchFromGitHub {
             owner = "qwer-lives";
             repo = "instarec";
