@@ -137,7 +137,7 @@
                         execute-command = "${pkgs.bash}/bin/bash";
                         pass-arguments-to-command = [
                             { source = "string"; name = "-c"; }
-                            { source = "string"; name = "echo \"$(date -Iseconds) $1\" >> /var/log/fcm.log"; }
+                            { source = "string"; name = "echo \"$(date -Iseconds) $0\" >> /var/log/fcm.log"; }
                             { source = "entire-payload"; }
                         ];
                     };
