@@ -20,6 +20,12 @@ in
             description = "Group under which webhook runs";
         };
 
+        port = mkOption {
+            type = types.port;
+            default = 9000;
+            description = "Port on which webhook listens";
+        };
+
         hooks = mkOption {
             type = types.unspecified;
             default = {};
@@ -40,7 +46,9 @@ in
             enable = true;
             user = cfg.user;
             group = cfg.group;
+            port = cfg.port;
             hooks = cfg.hooks;
+            openFirewall = true;
         };
     };
 }
