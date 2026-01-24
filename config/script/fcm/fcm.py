@@ -71,7 +71,10 @@ def record(username: str, name: str, timestamp: str):
     # Record the livestream, mux into mp4
     output = folder / f"{timestamp}.mp4"
     log_file = (folder / "instarec.log").open("w")
-    proc = subprocess.Popen(["instarec", username, str(output)], stdout=log_file, stderr=subprocess.STDOUT)
+
+    env = os.environ.copy()
+    env["HOME"] = "/root"  # instarec looks in ~/.config/instarec/credentials.json
+    proc = subprocess.Popen(["instarec", username, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
 
     # Create metadata.txt
     metadata = folder / "metadata.txt"
