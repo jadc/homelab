@@ -134,10 +134,8 @@
                 enable = true;
                 hooks = {
                     fcm = {
-                        execute-command = "${pkgs.bash}/bin/bash";
+                        execute-command = "/run/current-system/sw/bin/fcm";
                         pass-arguments-to-command = [
-                            { source = "string"; name = "-c"; }
-                            { source = "string"; name = "echo \"$(date -Iseconds) $0\" >> /var/log/fcm.log"; }
                             { source = "entire-payload"; }
                         ];
                     };
