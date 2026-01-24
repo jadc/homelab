@@ -103,6 +103,7 @@ def main():
         panic(e)
 
     if data == None or data.get("anapp") != "Instagram":
+        logging.debug("Invalid message")
         return
 
     # Get notification sender's username
@@ -143,7 +144,7 @@ def send_discord(payload: dict):
     threading.Thread(target=send, daemon=True).start()
 
 def panic(e: Exception) -> NoReturn:
-    logging.error(f"Error: {e}")
+    logging.error(e)
     sys.exit(1)
 
 if __name__ == "__main__":
