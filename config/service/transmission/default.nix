@@ -74,10 +74,10 @@ in
                 # RPC is the API servarr services use
                 rpc-authentication-required = false;
                 rpc-bind-address = "0.0.0.0";
-                rpc-host-whitelist = "192.168.*.*";
+                rpc-host-whitelist = "192.168.*.*,10.*.*.*";
                 rpc-host-whitelist-enabled = true;
                 rpc-port = cfg.port;
-                rpc-whitelist = "127.0.0.1,192.168.*.*";
+                rpc-whitelist = "127.0.0.1,192.168.*.*,10.*.*.*";
                 rpc-whitelist-enabled = true;
 
                 blocklist-enabled = true;
