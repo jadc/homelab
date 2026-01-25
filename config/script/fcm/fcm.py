@@ -121,16 +121,7 @@ def handle_request(body: str):
 def record(username: str, name: str, timestamp: str):
     logging.info(f"{name} (@{username}) has gone live!")
     send_discord({
-        "embeds": [{"title": f"{name} (@{username}) has gone live!", "color": 0x57F287}],
-        "components": [{
-            "type": 1,
-            "components": [{
-                "type": 2,
-                "style": 5,
-                "label": "Watch",
-                "url": f"https://instagram.com/{username}/live",
-            }],
-        }],
+        "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has gone live!", "color": 0x57F287}],
     })
 
     dt = datetime.fromtimestamp(int(timestamp) / 1000, tz=timezone.utc)
@@ -155,7 +146,7 @@ def record(username: str, name: str, timestamp: str):
     log_file.close()
     logging.info(f"{name} (@{username}) has ended their live.")
     send_discord({
-        "embeds": [{"title": f"{name} (@{username}) has ended their live.", "color": 0xED4245}]
+        "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has ended their live.", "color": 0xED4245}]
     })
 
 
