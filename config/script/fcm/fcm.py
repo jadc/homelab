@@ -15,7 +15,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 logging.basicConfig(
-    filename="/var/log/fcm.log",
     format="%(asctime)s %(levelname)s %(message)s",
     level=logging.DEBUG,
 )
