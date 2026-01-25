@@ -121,7 +121,7 @@ def handle_request(body: str):
 def record(username: str, name: str, timestamp: str):
     logging.info(f"{name} (@{username}) has gone live!")
     send_discord({
-        "embeds": [{"title": f"{name} (@{username}) has gone live!"}],
+        "embeds": [{"title": f"{name} (@{username}) has gone live!", "color": 0x57F287}],
         "components": [{
             "type": 1,
             "components": [{
@@ -155,7 +155,7 @@ def record(username: str, name: str, timestamp: str):
     log_file.close()
     logging.info(f"{name} (@{username}) has ended their live.")
     send_discord({
-        "embeds": [{"title": f"{name} (@{username}) has ended their live."}]
+        "embeds": [{"title": f"{name} (@{username}) has ended their live.", "color": 0xED4245}]
     })
 
 
