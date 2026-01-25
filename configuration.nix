@@ -136,10 +136,12 @@
                 group = "root";
                 hooks = {
                     fcm = {
-                        execute-command = "${pkgs.bash}/bin/bash";
+                        execute-command = "${pkgs.uv}/bin/uv";
                         pass-arguments-to-command = [
-                            { source = "string"; name = "-c"; }
-                            { source = "string"; name = "printf '%s\\0' \"$0\" | xargs -0 ${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${toString ./config/script/fcm/fcm.py} >> /var/log/fcm.log 2>&1"; }
+                            { source = "string"; name = "run"; }
+                            { source = "string"; name = "--python"; }
+                            { source = "string"; name = "${pkgs.python3}/bin/python3"; }
+                            { source = "string"; name = toString ./config/script/fcm/fcm.py; }
                             { source = "entire-payload"; }
                         ];
                     };
