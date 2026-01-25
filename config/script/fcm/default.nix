@@ -27,6 +27,7 @@ in
 
             serviceConfig = {
                 ExecStart = "${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${./fcm.py}";
+                Environment = "PYTHONUNBUFFERED=1";
                 Restart = "always";
                 RestartSec = 5;
             };
