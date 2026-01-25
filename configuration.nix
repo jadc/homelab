@@ -129,24 +129,10 @@
             vm = {
                 enable = true;
             };
+        };
 
-            webhook = {
-                enable = true;
-                user = "root";
-                group = "root";
-                hooks = {
-                    fcm = {
-                        execute-command = "${pkgs.uv}/bin/uv";
-                        pass-arguments-to-command = [
-                            { source = "string"; name = "run"; }
-                            { source = "string"; name = "--python"; }
-                            { source = "string"; name = "${pkgs.python3}/bin/python3"; }
-                            { source = "string"; name = toString ./config/script/fcm/fcm.py; }
-                            { source = "entire-payload"; }
-                        ];
-                    };
-                };
-            };
+        script = {
+            fcm.enable = true;
         };
     };
 }
