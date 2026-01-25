@@ -104,14 +104,7 @@ def handle_request(body: str):
         return
 
     sender = None
-    if extras_str := data.get("anextras"):
-        try:
-            extras = json.loads(extras_str)
-            sender_id = extras.get("com.instagram.android.igns.logging.sender_id")
-        except json.JSONDecodeError as e:
-            logging.error(f"Invalid extras JSON: {e}")
-            return
-
+    if sender_id := data.get("sender_id"):
         sender = USERNAMES.get(sender_id)
 
     if sender is None:
