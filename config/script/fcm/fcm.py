@@ -160,13 +160,7 @@ def record(username: str, name: str, timestamp: str):
 
 
 def send_discord(payload: dict):
-    if not os.path.exists(WEBHOOK_PATH):
-        logging.error(f"Webhook file not found: {WEBHOOK_PATH}")
-        return
-
     def send():
-        with open(WEBHOOK_PATH) as f:
-            webhook_url = f.read().strip()
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(webhook_url, data=data, headers={"Content-Type": "application/json"})
         urllib.request.urlopen(req)
@@ -175,6 +169,10 @@ def send_discord(payload: dict):
 
 
 def main():
+    global webhook_url
+    with open(WEBHOOK_PATH) as f:
+        webhook_url = f.read().strip()
+    logging.info(f"Webhook: {webhook_url}")
     logging.info(f"Starting server on {HOST}:{PORT}")
     server = HTTPServer((HOST, PORT), Handler)
     server.serve_forever()
