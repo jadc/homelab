@@ -162,7 +162,10 @@ def record(username: str, name: str, timestamp: str):
 def send_discord(payload: dict):
     def send():
         data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(webhook_url, data=data, headers={"Content-Type": "application/json"})
+        req = urllib.request.Request(webhook_url, data=data, headers={
+            "Content-Type": "application/json",
+            "User-Agent": "fcm/1.0",
+        })
         urllib.request.urlopen(req)
 
     threading.Thread(target=send, daemon=True).start()
