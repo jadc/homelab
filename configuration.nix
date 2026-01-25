@@ -132,6 +132,8 @@
 
             webhook = {
                 enable = true;
+                user = "root";
+                group = "root";
                 hooks = {
                     fcm = {
                         execute-command = "${pkgs.bash}/bin/bash";
