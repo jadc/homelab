@@ -26,7 +26,7 @@ in
             wantedBy = [ "multi-user.target" ];
 
             serviceConfig = {
-                ExecStartPre = "${pkgs.uv}/bin/uv tool install instarec";
+                ExecStartPre = "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec";
                 ExecStart = "${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${./fcm.py}";
                 Environment = "PYTHONUNBUFFERED=1";
                 Restart = "always";
