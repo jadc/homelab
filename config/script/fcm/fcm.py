@@ -1,3 +1,9 @@
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["instagrapi", "instarec"]
+# ///
+
 import json
 import logging
 import os
@@ -47,6 +53,20 @@ USERNAMES = {
     #"": "_artdealer_",
     #"": "joy_divizn",
     #"": "homixidemeechie5",
+    #"": "fakemink",
+    #"": "sk8star",
+    #"": "diorvsyou",
+    #"": "thuggerthugger1",
+    #"": "lilbaby",
+    #"": "champagnepapi",
+    #"": "nba_youngboy",
+    #"": "lildurk",
+    #"": "trilobourne",
+    #"": "21savage",
+    #"": "youngnudy",
+    #"": "metroboomin",
+    #"": "future",
+    #"": "travisscott",
 }
 
 def record(username: str, name: str, timestamp: str):
