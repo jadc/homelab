@@ -139,7 +139,7 @@
                         execute-command = "${pkgs.bash}/bin/bash";
                         pass-arguments-to-command = [
                             { source = "string"; name = "-c"; }
-                            { source = "string"; name = "WEBHOOK=${inputs.secrets}/webhook printf '%s\\0' \"$0\" | xargs -0 ${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${toString ./config/script/fcm/fcm.py} >> /var/log/fcm.log 2>&1"; }
+                            { source = "string"; name = "printf '%s\\0' \"$0\" | xargs -0 ${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${toString ./config/script/fcm/fcm.py} >> /var/log/fcm.log 2>&1"; }
                             { source = "entire-payload"; }
                         ];
                     };

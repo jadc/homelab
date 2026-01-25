@@ -152,10 +152,12 @@ def main():
         case _:
             logging.debug("Unhandled message")
 
+WEBHOOK_PATH = "/run/secrets/webhook"
+
 def send_discord(payload: dict):
-    webhook_path = os.environ.get("WEBHOOK")
-    if not webhook_path:
-        logging.error("WEBHOOK environment variable not set")
+    webhook_path = WEBHOOK_PATH
+    if not os.path.exists(webhook_path):
+        logging.error(f"Webhook file not found: {webhook_path}")
         return
 
     def send():
