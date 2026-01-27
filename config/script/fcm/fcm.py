@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["instagrapi", "instarec", "aiohttp-socks"]
+# dependencies = ["instagrapi", "instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
 # ///
 
 import json
@@ -14,6 +14,10 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
+import google.oauth2.credentials
+import googleapiclient.discovery
+import googleapiclient.http
+
 logging.basicConfig(
     format="%(levelname)s %(message)s",
     level=logging.DEBUG,
@@ -23,6 +27,7 @@ HOST = "0.0.0.0"
 PORT = 9000
 OUTPUT_DIR = "/data/shared/lives"
 WEBHOOK_PATH = "/run/secrets/webhook"
+YOUTUBE_TOKEN_PATH = "/run/secrets/youtube"
 
 USERNAMES = {
     "279519379": "playboicarti",
@@ -136,11 +141,20 @@ def record(username: str, name: str, timestamp: str):
     env["HOME"] = "/root"
     proc = subprocess.Popen(["instarec", username, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
 
-    metadata = folder / "metadata.txt"
-    with metadata.open("w") as f:
-        f.write(f"{name} @{username} IG Live ({dt.strftime('%-m/%d/%y')})\n")
-        f.write(f"https://instagram.com/{username} on {dt.strftime('%b. %-d, %Y at %-I:%M:%S %p UTC')}\n")
-        f.write(f"\n\n#iglive #{dt.strftime('%Y')} #unreleased #snippet #leak #{username}\n")
+    metadata = {
+        "snippet": {
+            "categoryId": "22",
+            "title": f"{name} @{username} IG Live ({dt.strftime('%-m/%d/%y')})",
+            "description": f"https://instagram.com/{username} on {dt.strftime('%b. %-d, %Y at %-I:%M:%S %p UTC')}",
+            "tags": ["iglive", dt.strftime("%Y"), "unreleased", "snippet", "leak", username],
+        },
+        "status": {
+            "privacyStatus": "private",
+        },
+    }
+
+    with (folder / "metadata.json").open("w") as f:
+        json.dump(metadata, f, indent=2)
 
     proc.wait()
     log_file.close()
@@ -149,6 +163,7 @@ def record(username: str, name: str, timestamp: str):
         "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has ended their live.", "color": 0xED4245}]
     })
 
+    upload_youtube(str(output), metadata)
 
 def send_discord(payload: dict):
     def send():
@@ -161,6 +176,37 @@ def send_discord(payload: dict):
 
     threading.Thread(target=send, daemon=True).start()
 
+
+def upload_youtube(video_path: str, request_body: dict):
+    with open(YOUTUBE_TOKEN_PATH) as f:
+        token_data = json.load(f)
+
+    credentials = google.oauth2.credentials.Credentials(
+        token=token_data["token"],
+        refresh_token=token_data["refresh_token"],
+        token_uri=token_data["token_uri"],
+        client_id=token_data["client_id"],
+        client_secret=token_data["client_secret"],
+    )
+
+    youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentials)
+
+    request = youtube.videos().insert(
+        part="snippet,status",
+        body=request_body,
+        media_body=googleapiclient.http.MediaFileUpload(video_path, chunksize=-1, resumable=True),
+    )
+
+    response = None
+    while response is None:
+        status, response = request.next_chunk()
+        if status:
+            logging.info(f"YouTube upload {int(status.progress() * 100)}%")
+
+    logging.info(f"Video uploaded to YouTube with ID: {response['id']}")
+    send_discord({
+        "embeds": [{"description": f"[Uploaded to YouTube](https://youtube.com/watch?v={response['id']})", "color": 0x5865F2}]
+    })
 
 def main():
     global webhook_url
