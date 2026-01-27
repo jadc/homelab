@@ -13,7 +13,6 @@ in
         environment.systemPackages = [
             pkgs.uv
             pkgs.python3
-            pkgs.ffmpeg
         ];
 
         systemd.tmpfiles.rules = [
@@ -24,6 +23,8 @@ in
             description = "FCM Snooper";
             after = [ "network.target" ];
             wantedBy = [ "multi-user.target" ];
+
+            path = [ pkgs.ffmpeg ];
 
             serviceConfig = {
                 ExecStartPre = "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec";
