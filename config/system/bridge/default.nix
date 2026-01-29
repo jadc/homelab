@@ -25,7 +25,7 @@ in
             bridges.br0.interfaces = [ cfg.interface ];
             interfaces.br0.useDHCP = true;
             interfaces.br0.macAddress = cfg.macAddress;
-            firewall.trustedInterfaces = [ "br0" ];
+            firewall.trustedInterfaces = [ "br0" "virbr0" ];
 
             # Disable interfaces that are now in the bridge
             interfaces.${cfg.interface}.useDHCP = false;

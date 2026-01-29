@@ -1,4 +1,4 @@
-{ config, inputs, ... }:
+{ config, inputs, pkgs, ... }:
 
 {
     homelab = {
@@ -129,6 +129,10 @@
             vm = {
                 enable = true;
             };
+        };
+
+        script = {
+            fcm.enable = true;
         };
     };
 }
