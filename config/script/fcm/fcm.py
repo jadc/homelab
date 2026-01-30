@@ -38,7 +38,7 @@ USERNAMES = {
     "35332145323": "bedroque00",
     "34186617956": "1onearm",
     "13833573763": "skai",
-    "77858229546": "perupujols",
+    #"77858229546": "perupujols",
     "44665574439": "opium_00pium",
     "6439958169": "wegonebeok",
     "8652008389": "sexisdeath",
