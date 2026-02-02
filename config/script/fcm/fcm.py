@@ -145,7 +145,7 @@ def record(username: str, name: str, timestamp: str):
     metadata = {
         "snippet": {
             "categoryId": "22",
-            "title": f"{name} @{username} IG Live ({dt.strftime('%-m/%d/%y')})",
+            "title": f"{name} @{username} IG Live ({dt.strftime('%-m/%-d/%y')})",
             "description": f"https://instagram.com/{username} on {dt.strftime('%b. %-d, %Y at %-I:%M:%S %p UTC')}\n\n\n{' '.join(f'#{tag}' for tag in tags)}",
             "tags": tags,
         },
