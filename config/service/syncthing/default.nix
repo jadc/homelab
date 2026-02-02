@@ -46,6 +46,8 @@ in
         # Create root directory with appropriate permissions
         systemd.tmpfiles.rules = [
             "d ${cfg.root} 0775 ${cfg.user} ${cfg.group} - -"
+            # Enforce permissions on existing directory (syncthing may create it with 0700)
+            "z ${cfg.root} 0775 ${cfg.user} ${cfg.group} - -"
         ];
 
         # Configure service
