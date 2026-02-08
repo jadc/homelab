@@ -39,6 +39,12 @@ in
                 type = types.bool;
                 default = false;
             };
+
+            hugepages = mkOption {
+                type = types.int;
+                default = 0;
+                description = "Number of 2MB hugepages to allocate (0 to disable)";
+            };
         };
     };
 
@@ -124,6 +130,9 @@ in
                 ] ++ optionals (!self.flags.nvidia) [
                     # Disable NVIDIA GPU
                     "nouveau.modeset=0"
+                ] ++ optionals (self.flags.hugepages > 0) [
+                    "hugepagesz=2M"
+                    "hugepages=${toString self.flags.hugepages}"
                 ];
 
         };

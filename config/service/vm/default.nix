@@ -36,6 +36,12 @@ in
             };
         };
 
+        # Allow libvirt to lock memory for hugepages
+        security.pam.loginLimits = [
+            { domain = "@libvirt-qemu"; item = "memlock"; type = "soft"; value = "unlimited"; }
+            { domain = "@libvirt-qemu"; item = "memlock"; type = "hard"; value = "unlimited"; }
+        ];
+
         # Start VM when receiving WoL packet
         homelab.service.wol = {
             enable = true;

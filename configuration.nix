@@ -16,6 +16,10 @@
 
                     # Pass through NVIDIA GPU
                     vfio = [ "10de:2208" "10de:1aef" ];
+
+                    # Use static huge pages for VM
+                    # Should match RAM allocated to guest * 512
+                    hugepages = 40 * 512;
                 };
             };
 
