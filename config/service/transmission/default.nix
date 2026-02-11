@@ -93,5 +93,13 @@ in
 
         # Prioritize I/O of other services over transmission
         systemd.services.transmission.serviceConfig.IOSchedulingPriority = 7;
+
+        # Bind parent directory instead of individual complete/incomplete subdirectories
+        # so they share a mount point, allowing Transmission to rename() between them
+        systemd.services.transmission.serviceConfig.BindPaths = lib.mkForce [
+            config.services.transmission.home
+            cfg.root
+            "/run"
+        ];
     };
 }
