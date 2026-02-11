@@ -90,7 +90,7 @@
                 radarr.apiKeyFile = "${inputs.secrets}/radarr.key";
             };
 
-            transmission = {
+            qbittorrent = {
                 enable = true;
                 root = "${config.homelab.system.devices.data.mountPoint}/torrents";
                 user = "torrent";
