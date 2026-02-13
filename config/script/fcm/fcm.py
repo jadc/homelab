@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["instagrapi", "instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
+# dependencies = ["instagrapi", "instarec @ git+https://github.com/jadc/instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
 # ///
 
 import json
@@ -118,12 +118,12 @@ def handle_request(body: str):
 
     match data.get("antext"):
         case "Live now":
-            record(sender, data.get("antitle"), data.get("anwhentime"))
+            record(sender, sender_id, data.get("antitle"), data.get("anwhentime"))
         case _:
             logging.debug("Unhandled message")
 
 
-def record(username: str, name: str, timestamp: str):
+def record(username: str, user_id: str, name: str, timestamp: str):
     logging.info(f"{name} (@{username}) has gone live!")
     send_discord({
         "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has gone live!", "color": 0x57F287}],
@@ -139,7 +139,7 @@ def record(username: str, name: str, timestamp: str):
 
     env = os.environ.copy()
     env["HOME"] = "/root"
-    proc = subprocess.Popen(["instarec", username, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
+    proc = subprocess.Popen(["instarec", user_id, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
 
     tags = ["iglive", dt.strftime("%Y"), "unreleased", "snippet", "leak", username]
     metadata = {
