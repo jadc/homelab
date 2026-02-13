@@ -25,7 +25,7 @@ in
             after = [ "network.target" ];
             wantedBy = [ "multi-user.target" ];
 
-            path = [ pkgs.ffmpeg ];
+            path = [ pkgs.ffmpeg pkgs.git ];
 
             serviceConfig = {
                 ExecStartPre = "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec@git+https://github.com/jadc/instarec";
