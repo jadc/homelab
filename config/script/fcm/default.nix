@@ -28,7 +28,7 @@ in
             path = [ pkgs.ffmpeg pkgs.git ];
 
             serviceConfig = {
-                ExecStartPre = "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec@git+https://github.com/jadc/instarec";
+                ExecStartPre = "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec";
                 ExecStart = "${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${./fcm.py}";
                 Environment = "PYTHONUNBUFFERED=1";
                 Restart = "always";
