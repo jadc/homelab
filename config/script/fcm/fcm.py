@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["instagrapi", "instarec @ git+https://github.com/jadc/instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
+# dependencies = ["instagrapi", "instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
 # ///
 
 import json
