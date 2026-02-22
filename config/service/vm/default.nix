@@ -15,7 +15,7 @@ in
             spice-gtk
             spice-protocol
             win-spice
-            win-virtio
+            virtio-win
         ];
 
         services.spice-vdagentd.enable = true;
@@ -26,13 +26,6 @@ in
                 package = pkgs.qemu_kvm;
                 runAsRoot = true;
                 swtpm.enable = true;
-                ovmf = {
-                    enable = true;
-                    packages = [(pkgs.OVMFFull.override {
-                        secureBoot = true;
-                        tpmSupport = true;
-                    }).fd];
-                };
             };
         };
 

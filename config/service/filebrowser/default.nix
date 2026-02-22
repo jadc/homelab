@@ -5,9 +5,6 @@ let
     cfg = config.homelab.service.${name};
 in
 {
-    # Copied from unstable, remove when in stable
-    imports = [ ./filebrowser.nix ];
-
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
