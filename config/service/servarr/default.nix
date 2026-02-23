@@ -190,7 +190,7 @@ in
             # https://raw.githubusercontent.com/imjustleaving/ServersatHome/refs/heads/main/recyclarr.yml
             configuration = {
                 sonarr.web-1080p-v4 = {
-                    api_key._secret = "/run/credentials/recyclarr.service/sonarr-api_key";
+                    api_key._secret = cfg.sonarr.apiKeyFile;
                     base_url = "http://localhost:${toString cfg.sonarr.port}";
                     delete_old_custom_formats = true;
                     replace_existing_custom_formats = true;
@@ -201,11 +201,14 @@ in
                         { template = "sonarr-v4-custom-formats-web-1080p"; }
                         { template = "sonarr-v4-quality-profile-web-2160p"; }
                         { template = "sonarr-v4-custom-formats-web-2160p"; }
+                        { template = "sonarr-quality-definition-anime"; }
+                        { template = "sonarr-v4-quality-profile-anime"; }
+                        { template = "sonarr-v4-custom-formats-anime"; }
                     ];
 
                     quality_profiles = [
-                        { name = "WEB-1080p"; min_format_score = 0; }
-                        { name = "WEB-2160p"; min_format_score = 0; }
+                        { name = "WEB-1080p"; min_format_score = -100000; }
+                        { name = "WEB-2160p"; min_format_score = -100000; }
                     ];
 
                     custom_formats = [
@@ -257,7 +260,7 @@ in
                 };
 
                 radarr.uhd-bluray-web = {
-                    api_key._secret = "/run/credentials/recyclarr.service/radarr-api_key";
+                    api_key._secret = cfg.radarr.apiKeyFile;
                     base_url = "http://localhost:${toString cfg.radarr.port}";
                     delete_old_custom_formats = true;
                     replace_existing_custom_formats = true;
@@ -268,11 +271,14 @@ in
                         { template = "radarr-custom-formats-uhd-bluray-web"; }
                         { template = "radarr-quality-profile-hd-bluray-web"; }
                         { template = "radarr-custom-formats-hd-bluray-web"; }
+                        { template = "radarr-quality-definition-anime"; }
+                        { template = "radarr-quality-profile-anime"; }
+                        { template = "radarr-custom-formats-anime"; }
                     ];
 
                     quality_profiles = [
-                        { name = "UHD Bluray + WEB"; min_format_score = 0; }
-                        { name = "HD Bluray + WEB"; min_format_score = 0; }
+                        { name = "UHD Bluray + WEB"; min_format_score = -100000; }
+                        { name = "HD Bluray + WEB"; min_format_score = -100000; }
                     ];
 
                     custom_formats = [
@@ -303,38 +309,8 @@ in
                     ];
                 };
 
-                sonarr.anime = {
-                    api_key._secret = "/run/credentials/recyclarr.service/sonarr-api_key";
-                    base_url = "http://localhost:${toString cfg.sonarr.port}";
-                    delete_old_custom_formats = true;
-                    replace_existing_custom_formats = true;
-
-                    include = [
-                        { template = "sonarr-quality-definition-anime"; }
-                        { template = "sonarr-v4-quality-profile-anime"; }
-                        { template = "sonarr-v4-custom-formats-anime"; }
-                    ];
-                };
-
-                radarr.anime = {
-                    api_key._secret = "/run/credentials/recyclarr.service/radarr-api_key";
-                    base_url = "http://localhost:${toString cfg.radarr.port}";
-                    delete_old_custom_formats = true;
-                    replace_existing_custom_formats = true;
-
-                    include = [
-                        { template = "radarr-quality-definition-anime"; }
-                        { template = "radarr-quality-profile-anime"; }
-                        { template = "radarr-custom-formats-anime"; }
-                    ];
-                };
             };
         };
 
-        # Recyclarr secrets handling
-        systemd.services.recyclarr.serviceConfig.LoadCredential = [
-            "radarr-api_key:${cfg.radarr.apiKeyFile}"
-            "sonarr-api_key:${cfg.sonarr.apiKeyFile}"
-        ];
     };
 }
