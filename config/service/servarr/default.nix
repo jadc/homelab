@@ -203,6 +203,11 @@ in
                         { template = "sonarr-v4-custom-formats-web-2160p"; }
                     ];
 
+                    quality_profiles = [
+                        { name = "WEB-1080p"; min_format_score = 0; }
+                        { name = "WEB-2160p"; min_format_score = 0; }
+                    ];
+
                     custom_formats = [
                         {
                             trash_ids = [
@@ -263,6 +268,11 @@ in
                         { template = "radarr-custom-formats-uhd-bluray-web"; }
                         { template = "radarr-quality-profile-hd-bluray-web"; }
                         { template = "radarr-custom-formats-hd-bluray-web"; }
+                    ];
+
+                    quality_profiles = [
+                        { name = "UHD Bluray + WEB"; min_format_score = 0; }
+                        { name = "HD Bluray + WEB"; min_format_score = 0; }
                     ];
 
                     custom_formats = [
