@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["instagrapi", "instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
+# dependencies = ["instarec", "aiohttp-socks", "google-auth-oauthlib", "google-auth-httplib2", "google-api-python-client"]
 # ///
 
 import json
@@ -28,6 +28,7 @@ PORT = 9000
 OUTPUT_DIR = "/data/shared/lives"
 WEBHOOK_PATH = "/run/secrets/webhook"
 YOUTUBE_TOKEN_PATH = "/run/secrets/youtube"
+COOKIES_PATH = "/run/secrets/cookies_ig"
 
 USERNAMES = {
     "279519379": "playboicarti",
@@ -139,7 +140,7 @@ def record(username: str, user_id: str, name: str, timestamp: str):
 
     env = os.environ.copy()
     env["HOME"] = "/root"
-    proc = subprocess.Popen(["instarec", user_id, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
+    proc = subprocess.Popen(["instarec", "--cookies", COOKIES_PATH, user_id, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
 
     tags = ["iglive", dt.strftime("%Y"), "unreleased", "snippet", "leak", username]
     metadata = {
