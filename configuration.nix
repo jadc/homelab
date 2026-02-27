@@ -16,10 +16,6 @@
 
                     # Pass through NVIDIA GPU
                     vfio = [ "10de:2208" "10de:1aef" ];
-
-                    # Use static huge pages for VM
-                    # Should be slightly above guest RAM * 512
-                    hugepages = 42 * 512;
                 };
             };
 
@@ -132,6 +128,12 @@
 
             vm = {
                 enable = true;
+                hugepages = {
+                    enable = true;
+                    # Should be slightly above guest RAM * 512
+                    size = 42 * 512;
+                    guest = "win11";
+                };
             };
         };
 
