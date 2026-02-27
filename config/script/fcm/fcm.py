@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import subprocess
+import sys
 import threading
 import urllib.request
 from datetime import datetime, timezone
@@ -220,5 +221,30 @@ def main():
     server.serve_forever()
 
 
+def upload_folder(folder_name: str):
+    folder = Path(OUTPUT_DIR) / folder_name
+    if not folder.is_dir():
+        logging.error(f"Folder not found: {folder}")
+        sys.exit(1)
+
+    videos = list(folder.glob("*.mp4"))
+    if not videos:
+        logging.error(f"No .mp4 files found in {folder}")
+        sys.exit(1)
+
+    metadata_path = folder / "metadata.json"
+    if not metadata_path.exists():
+        logging.error(f"No metadata.json found in {folder}")
+        sys.exit(1)
+
+    with open(metadata_path) as f:
+        metadata = json.load(f)
+
+    upload_youtube(str(videos[0]), metadata)
+
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        upload_folder(sys.argv[1])
+    else:
+        main()
