@@ -18,6 +18,7 @@ in
         systemd.tmpfiles.rules = [
             "L+ /run/secrets/webhook - - - - ${inputs.secrets}/webhook"
             "L+ /run/secrets/youtube - - - - ${inputs.secrets}/youtube.json"
+            "L+ /run/secrets/cookies_ig - - - - ${inputs.secrets}/cookies_ig"
         ];
 
         systemd.services.fcm = {
