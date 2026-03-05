@@ -1,0 +1,68 @@
+application:
+  name: "hyp3rbridg3"
+  version: "1.0.0"
+  description: "Telegram to Discord bridge"
+  debug: False
+  healthcheck_interval: 10
+  recoverer_delay: 60
+  anti_spam_enabled: True
+  anti_spam_similarity_timeframe: 60
+  anti_spam_similarity_threshold: 0.8
+  anti_spam_strategy: heuristic
+
+api:
+  enabled: True
+  telegram_login_enabled: True
+  telegram_auth_file: "telegram_auth.json"
+  telegram_auth_request_expiration: 300
+  cors_origins: ["*"]
+
+logger:
+  level: "INFO"
+  file_max_bytes: 10485760
+  file_backup_count: 5
+  format: "%(asctime)s %(levelprefix)s %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  console: True
+  compress: False
+
+history:
+  backend: "json"
+  db_url: null
+  file_max_bytes: 10485760
+  file_backup_count: 5
+
+queue:
+  enabled: False
+  max_size: 1000
+
+telegram:
+  phone: "<your phone number>"
+  password: "<your password>"
+  api_id: 0
+  api_hash: "<your api hash>"
+  log_unhandled_conversations: True
+  subscribe_to_edit_events: True
+  subscribe_to_delete_events: True
+
+discord:
+  bot_token: "<your bot token>"
+  built_in_roles: ["everyone", "here"]
+  max_latency: 0.5
+
+openai:
+  enabled: False
+  api_key: ""
+  organization: ""
+  model: "gpt-4o-mini"
+  enrich_with_sources: False
+
+telegram_forwarders:
+  - forwarder_name: "example"
+    tg_channel_id: 0
+    discord_channel_id: 0
+    strip_off_links: False
+    send_as_embed: False
+    mention_everyone: False
+    forward_everything: True
+    forward_hashtags: []

@@ -126,6 +126,11 @@
                 };
             };
 
+            telegram-discord-bridge = {
+                enable = true;
+                configFile = "${inputs.secrets}/telegram-discord-bridge.yml";
+            };
+
             vm = {
                 enable = true;
                 hugepages = {
