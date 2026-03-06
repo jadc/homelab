@@ -126,6 +126,11 @@
                 };
             };
 
+            telegram = {
+                enable = true;
+                environmentFile = "${inputs.secrets}/telegram.env";
+            };
+
             vm = {
                 enable = true;
                 hugepages = {
