@@ -126,9 +126,9 @@
                 };
             };
 
-            telegram-discord-bridge = {
+            telegram = {
                 enable = true;
-                configFile = "${inputs.secrets}/telegram-discord-bridge.yml";
+                environmentFile = "${inputs.secrets}/telegram.env";
             };
 
             vm = {

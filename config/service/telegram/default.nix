@@ -1,36 +1,35 @@
 { config, lib, pkgs, ... }:
 
 let
-    name = "telegram-discord-bridge";
+    name = "telegram";
     cfg = config.homelab.service.${name};
-
-    repo = "https://github.com/hyp3rd/telegram-discord-bridge.git";
 in
 {
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
-        configFile = mkOption {
+        environmentFile = mkOption {
             type = types.str;
-            description = "Path to the config.yml file";
+            description = "Path to environment file containing TELEGRAM_API_ID, TELEGRAM_API_HASH, DISCORD_WEBHOOK_URL, and TELEGRAM_CHANNELS";
         };
     };
 
     config = lib.mkIf cfg.enable {
         systemd.services.${name} = {
-            description = "Telegram to Discord Bridge";
+            description = "Telegram to Discord Forwarder";
             after = [ "network-online.target" ];
             wants = [ "network-online.target" ];
             wantedBy = [ "multi-user.target" ];
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "${pkgs.uv}/bin/uv run --directory /var/lib/${name}/repo forwarder.py --start";
+                ExecStart = "${pkgs.uv}/bin/uv run ${./telegram.py}";
                 Restart = "on-failure";
                 RestartSec = 10;
                 WorkingDirectory = "/var/lib/${name}";
                 DynamicUser = true;
                 StateDirectory = name;
+                EnvironmentFile = cfg.environmentFile;
             };
 
             environment = {
@@ -38,17 +37,6 @@ in
                 UV_PYTHON_DOWNLOADS = "never";
                 UV_PYTHON = "${pkgs.python3}/bin/python3";
             };
-
-            path = [ pkgs.git pkgs.file ];
-
-            preStart = ''
-                if [ -d repo ]; then
-                    ${pkgs.git}/bin/git -C repo pull --ff-only
-                else
-                    ${pkgs.git}/bin/git clone ${repo} repo
-                fi
-                ln -sf ${cfg.configFile} repo/config.yml
-            '';
         };
     };
 }
