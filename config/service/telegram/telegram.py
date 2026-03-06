@@ -51,7 +51,7 @@ def parse_channels(raw: str) -> list[int | str]:
     return result
 
 
-def send_to_discord(
+async def send_to_discord(
     author: str,
     text: str,
     files: list[tuple[str, bytes]] | None = None,
@@ -61,20 +61,21 @@ def send_to_discord(
         "content": text or "",
     }
 
-    if files:
-        multipart_files = []
-        for i, (filename, data) in enumerate(files):
-            mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
-            multipart_files.append((f"files[{i}]", (filename, data, mime)))
+    async with httpx.AsyncClient() as http:
+        if files:
+            multipart_files = []
+            for i, (filename, data) in enumerate(files):
+                mime = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+                multipart_files.append((f"files[{i}]", (filename, data, mime)))
 
-        resp = httpx.post(
-            WEBHOOK_URL,
-            data={"payload_json": __import__("json").dumps(payload)},
-            files=multipart_files,
-            timeout=30,
-        )
-    else:
-        resp = httpx.post(WEBHOOK_URL, json=payload, timeout=10)
+            resp = await http.post(
+                WEBHOOK_URL,
+                data={"payload_json": __import__("json").dumps(payload)},
+                files=multipart_files,
+                timeout=30,
+            )
+        else:
+            resp = await http.post(WEBHOOK_URL, json=payload, timeout=10)
 
     resp.raise_for_status()
 
@@ -91,6 +92,9 @@ async def main() -> None:
 
     client = TelegramClient("forwarder_session", int(API_ID), API_HASH)
     await client.start()
+
+    # Load dialogs so Telethon receives updates from all joined channels
+    await client.get_dialogs()
 
     # Resolve channel entities so Telethon can filter on them
     entities = []
@@ -128,7 +132,7 @@ async def main() -> None:
 
         print(f"[{author}] {text[:80]}{f' +{len(files)} file(s)' if files else ''}")
         try:
-            send_to_discord(author, text, files or None)
+            await send_to_discord(author, text, files or None)
         except Exception as e:
             print(f"Discord error: {e}")
 
