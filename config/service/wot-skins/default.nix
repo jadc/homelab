@@ -78,6 +78,8 @@ in
             groups.${cfg.group} = {};
         };
 
+        networking.firewall.allowedTCPPorts = [ cfg.port ];
+
         systemd.services.${name} = {
             description = "WoT Skins";
             after = [ "network-online.target" ];
