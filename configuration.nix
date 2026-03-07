@@ -152,6 +152,8 @@
             caddy.proxies.wot-skins = {
                 domain = "chems.gg";
                 port = 3000;
+                tls.certFile = toString ./config/service/caddy/chems.gg.pem;
+                tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
             };
         };
 
