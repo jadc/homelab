@@ -126,6 +126,16 @@
                 };
             };
 
+            vm = {
+                enable = true;
+                hugepages = {
+                    enable = true;
+                    # Should be slightly above guest RAM * 512
+                    size = 42 * 512;
+                    guest = "win11";
+                };
+            };
+
             telegram = {
                 enable = true;
                 environmentFile = "${inputs.secrets}/telegram.env";
@@ -135,21 +145,13 @@
                 enable = true;
                 port = 3000;
                 rev = "main";
-                hash = lib.fakeHash;
+                hash = "0IiYUglRM9BBskX2uS8SL4LM1kkN0VuJHzY2H2ozvcU=";
+                group = config.homelab.service.samba.group;
+                contentDir = "${config.homelab.service.samba.shares.shared.root}/wot-skins";
             };
             caddy.proxies.wot-skins = {
                 domain = "chems.gg";
                 port = 3000;
-            };
-
-            vm = {
-                enable = true;
-                hugepages = {
-                    enable = true;
-                    # Should be slightly above guest RAM * 512
-                    size = 42 * 512;
-                    guest = "win11";
-                };
             };
         };
 

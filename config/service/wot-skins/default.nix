@@ -30,9 +30,36 @@ in
             type = types.str;
             description = "Hash of the fetched source (use lib.fakeHash to find it)";
         };
+
+        user = mkOption {
+            type = types.str;
+            default = name;
+            description = "User account under which the app runs";
+        };
+
+        group = mkOption {
+            type = types.str;
+            default = name;
+            description = "Group under which the app runs";
+        };
+
+        contentDir = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "External path to symlink as the app's static/content directory at runtime";
+        };
     };
 
     config = lib.mkIf cfg.enable {
+        # Create user and group
+        users = {
+            users.${cfg.user} = {
+                isSystemUser = true;
+                group = cfg.group;
+            };
+            groups.${cfg.group} = {};
+        };
+
         systemd.services.${name} = let
             node_modules = pkgs.stdenv.mkDerivation {
                 name = "${name}-node_modules";
@@ -64,6 +91,16 @@ in
                     cp app/package.json $out/
                 '';
             };
+            runDir = if cfg.contentDir != null
+                then "/var/lib/${name}/build"
+                else "${build}/build";
+
+            setupScript = pkgs.writeShellScript "${name}-setup" ''
+                rm -rf "$STATE_DIRECTORY/build"
+                cp -r --no-preserve=mode ${build}/build "$STATE_DIRECTORY/build"
+                rm -rf "$STATE_DIRECTORY/build/client/content"
+                ln -sf ${cfg.contentDir} "$STATE_DIRECTORY/build/client/content"
+            '';
         in {
             description = "WoT Skins";
             after = [ "network-online.target" ];
@@ -72,11 +109,14 @@ in
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "${pkgs.nodejs}/bin/node ${build}/build";
+                ExecStart = "${pkgs.nodejs}/bin/node ${runDir}";
                 Restart = "on-failure";
                 RestartSec = 10;
-                DynamicUser = true;
+                User = cfg.user;
+                Group = cfg.group;
                 StateDirectory = name;
+            } // lib.optionalAttrs (cfg.contentDir != null) {
+                ExecStartPre = "${setupScript}";
             };
 
             environment = {
