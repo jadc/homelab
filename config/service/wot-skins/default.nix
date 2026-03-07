@@ -10,6 +10,24 @@ let
         rev = cfg.rev;
         hash = cfg.hash;
     };
+
+    setupScript = pkgs.writeShellScript "${name}-setup" ''
+        # Rebuild only when source changes
+        if [ ! -f "$STATE_DIRECTORY/.rev" ] || [ "$(cat "$STATE_DIRECTORY/.rev")" != "${cfg.rev}" ]; then
+            rm -rf "$STATE_DIRECTORY/app"
+            cp -r ${repo}/app "$STATE_DIRECTORY/app"
+            chmod -R u+w "$STATE_DIRECTORY/app"
+            cd "$STATE_DIRECTORY/app"
+            ${pkgs.bun}/bin/bun install --frozen-lockfile
+            ${pkgs.bun}/bin/bun run build
+            echo "${cfg.rev}" > "$STATE_DIRECTORY/.rev"
+        fi
+
+        ${lib.optionalString (cfg.contentDir != null) ''
+            rm -rf "$STATE_DIRECTORY/app/build/client/content"
+            ln -sf ${cfg.contentDir} "$STATE_DIRECTORY/app/build/client/content"
+        ''}
+    '';
 in
 {
     options.homelab.service.${name} = with lib; {
@@ -60,48 +78,7 @@ in
             groups.${cfg.group} = {};
         };
 
-        systemd.services.${name} = let
-            node_modules = pkgs.stdenv.mkDerivation {
-                name = "${name}-node_modules";
-                src = repo;
-                nativeBuildInputs = [ pkgs.bun ];
-                buildPhase = ''
-                    cd app
-                    bun install --frozen-lockfile
-                '';
-                installPhase = ''
-                    mkdir -p $out
-                    cp -r app/node_modules $out/
-                '';
-            };
-
-            build = pkgs.stdenv.mkDerivation {
-                name = "${name}-build";
-                src = repo;
-                nativeBuildInputs = [ pkgs.bun pkgs.nodejs ];
-                buildPhase = ''
-                    cd app
-                    cp -r ${node_modules}/node_modules .
-                    bun run build
-                '';
-                installPhase = ''
-                    mkdir -p $out
-                    cp -r app/build $out/
-                    cp -r ${node_modules}/node_modules $out/
-                    cp app/package.json $out/
-                '';
-            };
-            runDir = if cfg.contentDir != null
-                then "/var/lib/${name}/build"
-                else "${build}/build";
-
-            setupScript = pkgs.writeShellScript "${name}-setup" ''
-                rm -rf "$STATE_DIRECTORY/build"
-                cp -r --no-preserve=mode ${build}/build "$STATE_DIRECTORY/build"
-                rm -rf "$STATE_DIRECTORY/build/client/content"
-                ln -sf ${cfg.contentDir} "$STATE_DIRECTORY/build/client/content"
-            '';
-        in {
+        systemd.services.${name} = {
             description = "WoT Skins";
             after = [ "network-online.target" ];
             wants = [ "network-online.target" ];
@@ -109,14 +86,13 @@ in
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "${pkgs.nodejs}/bin/node ${runDir}";
+                ExecStartPre = "${setupScript}";
+                ExecStart = "${pkgs.bun}/bin/bun /var/lib/${name}/app/build";
                 Restart = "on-failure";
                 RestartSec = 10;
                 User = cfg.user;
                 Group = cfg.group;
                 StateDirectory = name;
-            } // lib.optionalAttrs (cfg.contentDir != null) {
-                ExecStartPre = "${setupScript}";
             };
 
             environment = {
