@@ -1,4 +1,4 @@
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 {
     homelab = {
@@ -129,6 +129,17 @@
             telegram = {
                 enable = true;
                 environmentFile = "${inputs.secrets}/telegram.env";
+            };
+
+            wot-skins = {
+                enable = true;
+                port = 3000;
+                rev = "main";
+                hash = lib.fakeHash;
+            };
+            caddy.proxies.wot-skins = {
+                domain = "chems.gg";
+                port = 3000;
             };
 
             vm = {
