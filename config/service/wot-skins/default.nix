@@ -24,6 +24,8 @@ let
         fi
 
         ${lib.optionalString (cfg.contentDir != null) ''
+            rm -rf "$STATE_DIRECTORY/app/static/content"
+            ln -sf ${cfg.contentDir} "$STATE_DIRECTORY/app/static/content"
             rm -rf "$STATE_DIRECTORY/app/build/client/content"
             ln -sf ${cfg.contentDir} "$STATE_DIRECTORY/app/build/client/content"
         ''}
@@ -90,6 +92,7 @@ in
                 Type = "simple";
                 ExecStartPre = "${setupScript}";
                 ExecStart = "${pkgs.bun}/bin/bun /var/lib/${name}/app/build";
+                WorkingDirectory = "/var/lib/${name}/app";
                 Restart = "on-failure";
                 RestartSec = 10;
                 User = cfg.user;
