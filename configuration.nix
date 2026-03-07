@@ -145,7 +145,7 @@
                 enable = true;
                 port = 3000;
                 rev = "main";
-                hash = "0IiYUglRM9BBskX2uS8SL4LM1kkN0VuJHzY2H2ozvcU=";
+                hash = "sha256-0IiYUglRM9BBskX2uS8SL4LM1kkN0VuJHzY2H2ozvcU=";
                 group = config.homelab.service.samba.group;
                 contentDir = "${config.homelab.service.samba.shares.shared.root}/wot-skins";
             };
