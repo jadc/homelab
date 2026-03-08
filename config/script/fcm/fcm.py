@@ -35,12 +35,12 @@ USERNAMES = {
     "279519379": "playboicarti",
     "14584624": "pierrebourne",
     "3620523324": "praiseche",
-    "62345435174": "xaiversobased",
+    "62345435174": "xaviersobased",
     "213003800": "workingondying",
     "35332145323": "bedroque00",
+    "46043361219": "l00ve3ly",
     "34186617956": "1onearm",
     "13833573763": "skai",
-    #"77858229546": "perupujols",
     "44665574439": "opium_00pium",
     "6439958169": "wegonebeok",
     "8652008389": "sexisdeath",
@@ -77,6 +77,8 @@ USERNAMES = {
     "18900337": "travisscott",
     "67014034052": "ninevicious",
     "45062412316": "nettspend_",
+    "6153917767": "janeremover",
+    "8530323437": "underscores",
 }
 
 
