@@ -126,6 +126,8 @@
                 };
             };
 
+            docker.enable = true;
+
             vm = {
                 enable = true;
                 hugepages = {
