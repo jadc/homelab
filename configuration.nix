@@ -1,4 +1,4 @@
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 {
     homelab = {
@@ -126,11 +126,6 @@
                 };
             };
 
-            telegram = {
-                enable = true;
-                environmentFile = "${inputs.secrets}/telegram.env";
-            };
-
             vm = {
                 enable = true;
                 hugepages = {
@@ -139,6 +134,26 @@
                     size = 42 * 512;
                     guest = "win11";
                 };
+            };
+
+            telegram = {
+                enable = true;
+                environmentFile = "${inputs.secrets}/telegram.env";
+            };
+
+            wot-skins = {
+                enable = true;
+                port = 3000;
+                rev = "main";
+                hash = "sha256-0IiYUglRM9BBskX2uS8SL4LM1kkN0VuJHzY2H2ozvcU=";
+                group = config.homelab.service.samba.group;
+                contentDir = "${config.homelab.service.samba.shares.shared.root}/wot-skins";
+            };
+            caddy.proxies.wot-skins = {
+                domain = "chems.gg";
+                port = 3000;
+                tls.certFile = toString ./config/service/caddy/chems.gg.pem;
+                tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
             };
         };
 
