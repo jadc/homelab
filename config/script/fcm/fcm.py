@@ -76,7 +76,7 @@ USERNAMES = {
     "20111183": "future",
     "18900337": "travisscott",
     "67014034052": "ninevicious",
-    "45062412316", "nettspend_",
+    "45062412316": "nettspend_",
 }
 
 
