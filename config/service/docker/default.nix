@@ -11,5 +11,9 @@ in
 
     config = lib.mkIf cfg.enable {
         virtualisation.docker.enable = true;
+
+        systemd.tmpfiles.rules = [
+            "d /docker 0770 root docker -"
+        ];
     };
 }
