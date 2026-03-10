@@ -50,7 +50,7 @@ in
             wantedBy = [ "multi-user.target" ];
 
             environment = {
-                BUILD_CONTEXT = toString repo;
+                BUILD_CONTEXT = "${toString repo}/app";
                 PORT = toString cfg.port;
                 CONTENT_DIR = cfg.contentDir;
             };
