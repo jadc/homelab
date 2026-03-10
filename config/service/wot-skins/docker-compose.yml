@@ -1,0 +1,12 @@
+services:
+    wot-skins:
+        build: ${BUILD_CONTEXT}
+        ports:
+            - "${PORT}:${PORT}"
+        environment:
+            PORT: ${PORT}
+            NODE_ENV: production
+            CONTENT_DIR: ${CONTENT_DIR}
+        volumes:
+            - ${CONTENT_DIR}:${CONTENT_DIR}:ro
+        restart: "no"
