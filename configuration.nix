@@ -147,8 +147,7 @@
                 enable = true;
                 port = 3000;
                 rev = "main";
-                hash = "sha256-0IiYUglRM9BBskX2uS8SL4LM1kkN0VuJHzY2H2ozvcU=";
-                group = config.homelab.service.samba.group;
+                hash = "sha256-MJppDm7T5gmxy5/fUWDZMXeYvV+dUEX5fm9n0KkiKLk=";
                 contentDir = "${config.homelab.service.samba.shares.shared.root}/wot-skins";
             };
             caddy.proxies.wot-skins = {
