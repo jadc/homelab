@@ -159,12 +159,13 @@
 
             rudolfs = {
                 enable = true;
+                port = 8079;
                 dataDir = "${config.homelab.system.devices.data.mountPoint}/lfs";
                 hashedPasswordFile = "${inputs.secrets}/lfs.hash";
             };
             caddy.proxies.rudolfs = {
                 domain = "lfs.chems.gg";
-                port = 8080;
+                port = 8079;
                 tls.certFile = toString ./config/service/caddy/chems.gg.pem;
                 tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
             };
