@@ -1,0 +1,9 @@
+services:
+    rudolfs:
+        image: jasonwhite0/rudolfs
+        command: ["--host", "0.0.0.0:8080", "local", "--path", "/data"]
+        ports:
+            - "${PORT}:8080"
+        volumes:
+            - ${DATA_DIR}:/data
+        restart: "no"
