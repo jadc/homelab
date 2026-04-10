@@ -156,6 +156,19 @@
                 tls.certFile = toString ./config/service/caddy/chems.gg.pem;
                 tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
             };
+
+            rudolfs = {
+                enable = true;
+                dataDir = "${config.homelab.system.devices.data.mountPoint}/lfs";
+                hashedPasswordFile = "${inputs.secrets}/lfs.hash";
+            };
+            caddy.proxies.rudolfs = {
+                domain = "lfs.chems.gg";
+                port = 8080;
+                tls.certFile = toString ./config/service/caddy/chems.gg.pem;
+                tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
+            };
+
         };
 
         script = {
