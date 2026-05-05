@@ -15,7 +15,7 @@
                     quiet = true;
 
                     # Pass through NVIDIA GPU
-                    vfio = [ "10de:2208" "10de:1aef" ];
+                    vfio = [ "10de:2486" "10de:228b" ];
                 };
             };
 
