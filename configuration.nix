@@ -16,6 +16,8 @@
 
                     # Pass through NVIDIA GPU
                     vfio = [ "10de:2486" "10de:228b" ];
+
+                    hugepages = 32 * 512;
                 };
             };
 
@@ -130,12 +132,6 @@
 
             vm = {
                 enable = true;
-                hugepages = {
-                    enable = true;
-                    # Should be slightly above guest RAM * 512
-                    size = 42 * 512;
-                    guest = "win11";
-                };
             };
 
             telegram = {
