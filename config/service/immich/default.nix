@@ -48,6 +48,9 @@ in
             "d ${cfg.root} 0775 ${cfg.user} ${cfg.group} - -"
         ];
 
+        # Prevent PostgreSQL from consuming hugepages reserved for the VM
+        services.postgresql.settings.huge_pages = "off";
+
         services.immich = {
             enable = true;
 
