@@ -79,6 +79,11 @@ USERNAMES = {
     "45062412316": "nettspend_",
     "6153917767": "janeremover",
     "8530323437": "underscores",
+    "49016970653": "countdragons",
+    "35265760": "opmbabi",
+    "39229536464": "bleood",
+    "5077184169": "2slimey__",
+    "226114672": "chieffkeeffsossa",
 }
 
 
