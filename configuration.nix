@@ -135,7 +135,7 @@
             };
 
             telegram = {
-                enable = false;
+                enable = true;
                 environmentFile = "${inputs.secrets}/telegram.env";
             };
 
