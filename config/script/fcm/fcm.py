@@ -174,7 +174,9 @@ def record(username: str, user_id: str, name: str, timestamp: str):
         "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has ended their live.", "color": 0xED4245}]
     })
 
-    upload_youtube(str(output), metadata)
+    reencoded = reencode(output)
+    upload_youtube(str(reencoded), metadata)
+    reencoded.unlink(missing_ok=True)
 
 def send_discord(payload: dict):
     def send():
@@ -186,6 +188,20 @@ def send_discord(payload: dict):
         urllib.request.urlopen(req)
 
     threading.Thread(target=send, daemon=True).start()
+
+
+def reencode(input_path: Path) -> Path:
+    output_path = input_path.with_suffix(".reencoded.mp4")
+    logging.info(f"Re-encoding {input_path} to fix VFR...")
+    subprocess.run([
+        "ffmpeg", "-i", str(input_path),
+        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-pix_fmt", "yuv420p",
+        "-vsync", "cfr", "-r", "30", "-g", "60",
+        "-c:a", "copy",
+        str(output_path),
+    ], check=True)
+    logging.info(f"Re-encoding complete: {output_path}")
+    return output_path
 
 
 def upload_youtube(video_path: str, request_body: dict):
@@ -248,7 +264,9 @@ def upload_folder(folder_name: str):
     with open(metadata_path) as f:
         metadata = json.load(f)
 
-    upload_youtube(str(videos[0]), metadata)
+    reencoded = reencode(videos[0])
+    upload_youtube(str(reencoded), metadata)
+    reencoded.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
