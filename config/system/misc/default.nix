@@ -33,6 +33,9 @@
     # Standard packages
     programs.git.enable = true;
 
+    # Cap journal log size
+    services.journald.extraConfig = "SystemMaxUse=500M";
+
     # Do not need to update
     system.stateVersion = "25.05";
 }
