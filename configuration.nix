@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, inputs, ... }:
 
 {
     homelab = {
@@ -104,6 +104,15 @@
                 root = "${config.homelab.system.devices.data.mountPoint}/sync";
                 group = config.homelab.service.syncthing.group;
                 port = 8099;
+            };
+
+            navidrome = {
+                enable = true;
+                musicFolder = "${config.homelab.system.devices.data.mountPoint}/music";
+            };
+            caddy.proxies.navidrome = {
+                domain = "music.jad.red";
+                port = 4533;
             };
 
             immich = {
