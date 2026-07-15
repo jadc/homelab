@@ -25,11 +25,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1779474420,
-        "narHash": "sha256-5P1UGi9w8WmUOTPliMHCWT/2+bbNWccSHIsxT0FU67I=",
+        "lastModified": 1784159828,
+        "narHash": "sha256-ncAWWNFnQ0rFTxMkaq5IZiL1+RRtdbmyyfjRzngy86g=",
         "ref": "refs/heads/main",
-        "rev": "1653a7a044a4be1330d37cf5d9bd3ff9866b479a",
-        "revCount": 17,
+        "rev": "de59e987b38a5ee0d4ad5c416fb87a007b6da259",
+        "revCount": 18,
         "type": "git",
         "url": "ssh://git@github.com/jadc/homelab-secrets"
       },
