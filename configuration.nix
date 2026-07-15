@@ -132,6 +132,9 @@
                     vault = {
                         root = "${config.homelab.system.devices.data.mountPoint}/sync/vault";
                     };
+                    music = {
+                        root = "${config.homelab.system.devices.data.mountPoint}/music";
+                    };
                 };
             };
 
