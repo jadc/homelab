@@ -96,8 +96,8 @@ in
 
             # Override upstream service user/group
             systemd.services.navidrome.serviceConfig = {
-                User = cfg.user;
-                Group = cfg.group;
+                User = lib.mkForce cfg.user;
+                Group = lib.mkForce cfg.group;
             };
         })
 
