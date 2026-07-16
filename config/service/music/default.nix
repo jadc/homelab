@@ -132,10 +132,19 @@ in
             beetsConfig = pkgs.writeText "beets-config.yaml" ''
               directory: ${cfg.libraryDir}
               library: /var/lib/beets/library.db
+              plugins: chroma fromfilename fetchart embedart lastgenre scrub deezer spotify
               import:
                 move: yes
                 quiet: yes
                 quiet_fallback: skip
+              fetchart:
+                auto: yes
+              embedart:
+                auto: yes
+              lastgenre:
+                auto: yes
+              scrub:
+                auto: yes
             '';
         in {
             # Make beet CLI available for manual imports
