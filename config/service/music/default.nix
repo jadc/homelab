@@ -115,6 +115,9 @@ in
                     shares.directories = [ cfg.libraryDir ];
                 };
             };
+
+            # Open port for WebUI
+            networking.firewall.allowedTCPPorts = [ cfg.slskd.port ];
         })
 
         # beets
