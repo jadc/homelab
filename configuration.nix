@@ -111,10 +111,15 @@
                 downloadsDir = "${config.homelab.system.devices.data.mountPoint}/music/downloads";
                 group = "music";
 
-                navidrome.enable = true;
+                navidrome = {
+                    enable = true;
+                    environmentFile = "${inputs.secrets}/navidrome.env";
+                };
                 beets.enable = true;
-                slskd.enable = true;
-                slskd.environmentFile = "${inputs.secrets}/slskd.env";
+                slskd = {
+                    enable = true;
+                    environmentFile = "${inputs.secrets}/slskd.env";
+                };
             };
             caddy.proxies.navidrome = {
                 domain = "music.jad.red";
