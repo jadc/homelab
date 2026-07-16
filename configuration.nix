@@ -106,9 +106,15 @@
                 port = 8099;
             };
 
-            navidrome = {
-                enable = true;
-                musicFolder = "${config.homelab.system.devices.data.mountPoint}/music";
+            music = {
+                libraryDir = "${config.homelab.system.devices.data.mountPoint}/music/library";
+                downloadsDir = "${config.homelab.system.devices.data.mountPoint}/music/downloads";
+                group = "music";
+
+                navidrome.enable = true;
+                beets.enable = true;
+                slskd.enable = true;
+                slskd.environmentFile = "${inputs.secrets}/slskd.env";
             };
             caddy.proxies.navidrome = {
                 domain = "music.jad.red";
