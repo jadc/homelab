@@ -138,6 +138,11 @@ in
             # Auto-tag and move downloads into library
             systemd.services.beets-import = {
                 description = "Beets auto-import";
+
+                # Home of system users (/var/empty) is read-only
+                # beets writes to it, so this fixes that
+                environment.HOME = "/var/lib/beets";
+
                 serviceConfig = {
                     Type = "oneshot";
                     User = cfg.user;
