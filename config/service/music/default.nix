@@ -97,6 +97,8 @@ in
                     Address = "0.0.0.0";
                     Port = cfg.navidrome.port;
                     MusicFolder = cfg.libraryDir;
+                    # Remove deleted files from the database after each scan
+                    Scanner.PurgeMissing = "always";
                 };
             };
 
