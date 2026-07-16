@@ -135,8 +135,6 @@ in
               plugins: chroma fromfilename fetchart embedart lastgenre scrub deezer spotify
               import:
                 move: yes
-                quiet: yes
-                quiet_fallback: skip
               fetchart:
                 auto: yes
               embedart:
@@ -147,8 +145,13 @@ in
                 auto: yes
             '';
         in {
-            # Make beet CLI available for manual imports
-            environment.systemPackages = [ pkgs.beets ];
+            environment.systemPackages = [
+                pkgs.beets
+                (pkgs.writeShellScriptBin "beet-import" ''
+                    exec sudo -u ${cfg.user} env BEETSDIR=/var/lib/beets \
+                        ${pkgs.beets}/bin/beet -c ${beetsConfig} import "$@" ${cfg.downloadsDir}
+                '')
+            ];
 
             # Auto-tag and move downloads into library
             systemd.services.beets-import = {
@@ -163,7 +166,7 @@ in
                     User = cfg.user;
                     Group = cfg.group;
                     StateDirectory = "beets";
-                    ExecStart = "${pkgs.beets}/bin/beet -c ${beetsConfig} import -q ${cfg.downloadsDir}";
+                    ExecStart = "${pkgs.beets}/bin/beet -c ${beetsConfig} import -q --quiet-fallback skip ${cfg.downloadsDir}";
                 };
             };
 
