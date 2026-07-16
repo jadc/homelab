@@ -36,6 +36,12 @@ in
                 default = 4533;
                 description = "Port on which Navidrome listens";
             };
+
+            environmentFile = mkOption {
+                type = types.nullOr types.path;
+                default = null;
+                description = "Path to environment file for Navidrome";
+            };
         };
 
         slskd = {
@@ -94,10 +100,10 @@ in
                 };
             };
 
-            # Override upstream service user/group
             systemd.services.navidrome.serviceConfig = {
                 User = lib.mkForce cfg.user;
                 Group = lib.mkForce cfg.group;
+                EnvironmentFile = lib.mkIf (cfg.navidrome.environmentFile != null) cfg.navidrome.environmentFile;
             };
         })
 
