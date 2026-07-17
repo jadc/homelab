@@ -99,6 +99,16 @@ in
                     MusicFolder = cfg.libraryDir;
                     # Remove deleted files from the database after each scan
                     Scanner.PurgeMissing = "always";
+                    # Scan less aggressively than the default 1m
+                    Scanner.Schedule = "@every 15m";
+                    # Sort "recently added" by file mod time, not DB insert time
+                    RecentlyAddedByModTime = true;
+                    # Allow editing transcoding profiles from the web UI
+                    EnableTranscodingConfig = true;
+                    # Substring search instead of prefix-only
+                    SearchFullString = true;
+                    # Show artists in albums they featured on
+                    SubsonicArtistParticipations = true;
                 };
             };
 
