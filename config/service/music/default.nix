@@ -106,11 +106,15 @@ in
                     # Allow editing transcoding profiles from the web UI
                     EnableTranscodingConfig = true;
                     # Substring search instead of prefix-only
-                    SearchFullString = true;
+                    "Search.FullString" = true;
                     # Show artists in albums they featured on
                     SubsonicArtistParticipations = true;
                 };
             };
+
+            systemd.tmpfiles.rules = [
+                "Z /var/lib/navidrome 0700 ${cfg.user} ${cfg.group} - -"
+            ];
 
             systemd.services.navidrome.serviceConfig = {
                 User = lib.mkForce cfg.user;
