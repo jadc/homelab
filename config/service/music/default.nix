@@ -149,6 +149,15 @@ in
                 move: yes
               fetchart:
                 auto: yes
+                minwidth: 500
+                maxwidth: 0
+                quality: 0
+                max_filesize: 0
+                sources:
+                  - filesystem
+                  - coverart
+                  - itunes
+                  - amazon
               embedart:
                 auto: yes
               lastgenre:
@@ -158,10 +167,9 @@ in
             '';
         in {
             environment.systemPackages = [
-                pkgs.beets
-                (pkgs.writeShellScriptBin "beet-import" ''
+                (pkgs.writeShellScriptBin "beet" ''
                     exec sudo -u ${cfg.user} env BEETSDIR=/var/lib/beets \
-                        ${pkgs.beets}/bin/beet -c ${beetsConfig} import "$@" ${cfg.downloadsDir}
+                        ${pkgs.beets}/bin/beet -c ${beetsConfig} "$@"
                 '')
             ];
 
