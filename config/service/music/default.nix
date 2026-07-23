@@ -61,12 +61,6 @@ in
 
         beets = {
             enable = mkEnableOption "beets";
-
-            interval = mkOption {
-                type = types.str;
-                default = "*:0/5";
-                description = "Systemd calendar expression for how often to run the import";
-            };
         };
     };
 
@@ -144,7 +138,6 @@ in
 
         # beets
         (lib.mkIf cfg.beets.enable (let
-            # Auto-accepts confident matches, skips ambiguous ones.
             beetsConfig = pkgs.writeText "beets-config.yaml" ''
               directory: ${cfg.libraryDir}
               library: /var/lib/beets/library.db
@@ -159,8 +152,8 @@ in
                 max_filesize: 0
                 sources:
                   - filesystem
-                  - coverart
                   - itunes
+                  - coverart
                   - amazon
               embedart:
                 auto: yes
@@ -176,32 +169,6 @@ in
                         ${pkgs.beets}/bin/beet -c ${beetsConfig} "$@"
                 '')
             ];
-
-            # Auto-tag and move downloads into library
-            systemd.services.beets-import = {
-                description = "Beets auto-import";
-
-                # Home of system users (/var/empty) is read-only
-                # beets writes to it, so this fixes that
-                environment.HOME = "/var/lib/beets";
-
-                serviceConfig = {
-                    Type = "oneshot";
-                    User = cfg.user;
-                    Group = cfg.group;
-                    StateDirectory = "beets";
-                    ExecStart = "${pkgs.beets}/bin/beet -c ${beetsConfig} import -q --quiet-fallback skip ${cfg.downloadsDir}";
-                };
-            };
-
-            systemd.timers.beets-import = {
-                description = "Beets auto-import timer";
-                wantedBy = [ "timers.target" ];
-                timerConfig = {
-                    OnCalendar = cfg.beets.interval;
-                    Persistent = true;
-                };
-            };
         }))
     ];
 }
