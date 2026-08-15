@@ -37,7 +37,7 @@ USERNAMES = {
     "3620523324": "praiseche",
     "62345435174": "xaviersobased",
     "213003800": "workingondying",
-    "35332145323": "bedroque00",
+    "35332145323": "lucybedroque",
     "46043361219": "l00ve3ly",
     "34186617956": "1onearm",
     "13833573763": "skai",
