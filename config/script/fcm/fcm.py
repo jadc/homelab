@@ -135,9 +135,16 @@ def handle_request(body: str):
 
 def record(username: str, user_id: str, name: str, timestamp: str):
     logging.info(f"{name} (@{username}) has gone live!")
-    send_discord({
-        "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has gone live!", "color": 0x57F287}],
-    })
+    send_discord(
+        {
+            "embeds": [
+                {
+                    "description": f"{name} ([@{username}](https://instagram.com/{username})) has gone live!",
+                    "color": 0x57F287,
+                }
+            ],
+        }
+    )
 
     dt = datetime.fromtimestamp(int(timestamp) / 1000, tz=timezone.utc)
 
@@ -149,7 +156,12 @@ def record(username: str, user_id: str, name: str, timestamp: str):
 
     env = os.environ.copy()
     env["HOME"] = "/root"
-    proc = subprocess.Popen(["instarec", "--cookies", COOKIES_PATH, user_id, str(output)], stdout=log_file, stderr=subprocess.STDOUT, env=env)
+    proc = subprocess.Popen(
+        ["instarec", "--cookies", COOKIES_PATH, user_id, str(output)],
+        stdout=log_file,
+        stderr=subprocess.STDOUT,
+        env=env,
+    )
 
     tags = ["iglive", dt.strftime("%Y"), "unreleased", "snippet", "leak", username]
     metadata = {
@@ -170,21 +182,33 @@ def record(username: str, user_id: str, name: str, timestamp: str):
     proc.wait()
     log_file.close()
     logging.info(f"{name} (@{username}) has ended their live.")
-    send_discord({
-        "embeds": [{"description": f"{name} ([@{username}](https://instagram.com/{username})) has ended their live.", "color": 0xED4245}]
-    })
+    send_discord(
+        {
+            "embeds": [
+                {
+                    "description": f"{name} ([@{username}](https://instagram.com/{username})) has ended their live.",
+                    "color": 0xED4245,
+                }
+            ]
+        }
+    )
 
     reencoded = reencode(output)
     upload_youtube(str(reencoded), metadata)
     reencoded.unlink(missing_ok=True)
 
+
 def send_discord(payload: dict):
     def send():
         data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(webhook_url, data=data, headers={
-            "Content-Type": "application/json",
-            "User-Agent": "fcm/1.0",
-        })
+        req = urllib.request.Request(
+            webhook_url,
+            data=data,
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "fcm/1.0",
+            },
+        )
         urllib.request.urlopen(req)
 
     threading.Thread(target=send, daemon=True).start()
@@ -193,13 +217,31 @@ def send_discord(payload: dict):
 def reencode(input_path: Path) -> Path:
     output_path = input_path.with_suffix(".reencoded.mp4")
     logging.info(f"Re-encoding {input_path} to fix VFR...")
-    subprocess.run([
-        "ffmpeg", "-i", str(input_path),
-        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", "-pix_fmt", "yuv420p",
-        "-vsync", "cfr", "-r", "30", "-g", "60",
-        "-c:a", "copy",
-        str(output_path),
-    ], check=True)
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-i",
+            str(input_path),
+            "-c:v",
+            "libx264",
+            "-preset",
+            "ultrafast",
+            "-crf",
+            "18",
+            "-pix_fmt",
+            "yuv420p",
+            "-fps_mode",
+            "cfr",
+            "-r",
+            "30",
+            "-g",
+            "60",
+            "-c:a",
+            "copy",
+            str(output_path),
+        ],
+        check=True,
+    )
     logging.info(f"Re-encoding complete: {output_path}")
     return output_path
 
@@ -221,7 +263,9 @@ def upload_youtube(video_path: str, request_body: dict):
     request = youtube.videos().insert(
         part="snippet,status",
         body=request_body,
-        media_body=googleapiclient.http.MediaFileUpload(video_path, chunksize=-1, resumable=True),
+        media_body=googleapiclient.http.MediaFileUpload(
+            video_path, chunksize=-1, resumable=True
+        ),
     )
 
     response = None
@@ -231,9 +275,17 @@ def upload_youtube(video_path: str, request_body: dict):
             logging.info(f"YouTube upload {int(status.progress() * 100)}%")
 
     logging.info(f"Video uploaded to YouTube with ID: {response['id']}")
-    send_discord({
-        "embeds": [{"description": f"[Uploaded to YouTube](https://youtube.com/watch?v={response['id']})", "color": 0x5865F2}]
-    })
+    send_discord(
+        {
+            "embeds": [
+                {
+                    "description": f"[Uploaded to YouTube](https://youtube.com/watch?v={response['id']})",
+                    "color": 0x5865F2,
+                }
+            ]
+        }
+    )
+
 
 def main():
     global webhook_url
