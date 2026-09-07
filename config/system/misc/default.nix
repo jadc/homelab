@@ -9,6 +9,13 @@
         experimental-features = [ "nix-command" "flakes" ];
     };
 
+    # Automatically remove old, unused store paths
+    nix.gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 7d";
+    };
+
     # Use systemd-boot as a bootloader
     boot.loader = {
         systemd-boot = {
