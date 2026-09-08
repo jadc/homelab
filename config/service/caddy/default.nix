@@ -8,6 +8,18 @@ in
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
+        user = mkOption {
+            type = types.str;
+            default = name;
+            description = "User account under which Caddy runs";
+        };
+
+        group = mkOption {
+            type = types.str;
+            default = name;
+            description = "Group under which Caddy runs";
+        };
+
         tls = {
             certFile = mkOption {
                 type = types.nullOr types.str;
@@ -70,11 +82,39 @@ in
     };
 
     config = let
-        certFile = if cfg.tls.certFile != null then toString cfg.tls.certFile else null;
-        keyFile = if cfg.tls.keyFile != null then toString cfg.tls.keyFile else null;
+        certPath = "/etc/caddy/cert.pem";
+        keyPath = "/etc/caddy/private.key";
     in lib.mkIf cfg.enable {
+            environment.etc = lib.mkMerge ([
+                (lib.mkIf (cfg.tls.certFile != null) {
+                    "caddy/cert.pem".source = cfg.tls.certFile;
+                })
+                (lib.mkIf (cfg.tls.keyFile != null) {
+                    "caddy/private.key" = {
+                        source = cfg.tls.keyFile;
+                        mode = "0400";
+                        user = cfg.user;
+                        group = cfg.group;
+                    };
+                })
+            ] ++ lib.flatten (lib.mapAttrsToList (name: proxyCfg: [
+                (lib.mkIf (proxyCfg.tls.certFile != null) {
+                    "caddy/${name}.pem".source = proxyCfg.tls.certFile;
+                })
+                (lib.mkIf (proxyCfg.tls.keyFile != null) {
+                    "caddy/${name}.key" = {
+                        source = proxyCfg.tls.keyFile;
+                        mode = "0400";
+                        user = cfg.user;
+                        group = cfg.group;
+                    };
+                })
+            ]) cfg.proxies));
+
             services.caddy = {
                 enable = true;
+                user = cfg.user;
+                group = cfg.group;
 
                 # Disable HTTP/3 (QUIC) to disable UDP 443
                 globalConfig = ''
@@ -86,8 +126,8 @@ in
                 virtualHosts = lib.mkMerge (
                     lib.mapAttrsToList (name: proxyCfg:
                     let
-                        proxyCert = if proxyCfg.tls.certFile != null then toString proxyCfg.tls.certFile else certFile;
-                        proxyKey = if proxyCfg.tls.keyFile != null then toString proxyCfg.tls.keyFile else keyFile;
+                        proxyCert = if proxyCfg.tls.certFile != null then "/etc/caddy/${name}.pem" else certPath;
+                        proxyKey = if proxyCfg.tls.keyFile != null then "/etc/caddy/${name}.key" else keyPath;
                     in {
                         ${proxyCfg.domain} = {
                             extraConfig = ''
