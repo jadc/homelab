@@ -68,6 +68,16 @@
                 tls.keyFile = "${inputs.secrets}/ssl-private.key";
             };
 
+            sparkyfitness = {
+                enable = true;
+                domain = "fit.jad.red";
+                environmentFile = "${inputs.secrets}/sparkyfitness.env";
+            };
+            caddy.proxies.sparkyfitness = {
+                domain = config.homelab.service.sparkyfitness.domain;
+                port = config.homelab.service.sparkyfitness.port;
+            };
+
             jellyfin = {
                 enable = true;
                 group = config.homelab.service.servarr.group;

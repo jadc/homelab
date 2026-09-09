@@ -1,5 +1,23 @@
 {
   "nodes": {
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1788614874,
@@ -19,23 +37,60 @@
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "secrets": "secrets"
+        "secrets": "secrets",
+        "sparkyfitness": "sparkyfitness"
       }
     },
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1784162283,
-        "narHash": "sha256-1YnEpDKIj9XPE0k4E/xAi3XKhZQ+MJ83shEUW5DizCA=",
+        "lastModified": 1788923323,
+        "narHash": "sha256-rfpf9smjO+rRXnsULXhvgQXwPY3Kmhd/g/EuCPGVQTU=",
         "ref": "refs/heads/main",
-        "rev": "ed7c06b92bb90b0d4561cd5d8d77393e457ef085",
-        "revCount": 19,
+        "rev": "ca8f31692ea34de566bd6affda5b79a23a96ed8a",
+        "revCount": 20,
         "type": "git",
         "url": "ssh://git@github.com/jadc/homelab-secrets"
       },
       "original": {
         "type": "git",
         "url": "ssh://git@github.com/jadc/homelab-secrets"
+      }
+    },
+    "sparkyfitness": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788889435,
+        "narHash": "sha256-bGpQ4mKBG/wOxXTFaBO6u+HGymM4NNPyMLanEXI9TAs=",
+        "owner": "CodeWithCJ",
+        "repo": "SparkyFitness",
+        "rev": "437b0708f8999e754bba188f48ce355d1a3a41ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "CodeWithCJ",
+        "repo": "SparkyFitness",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },
