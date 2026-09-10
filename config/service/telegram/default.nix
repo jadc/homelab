@@ -10,7 +10,7 @@ in
 
         environmentFile = mkOption {
             type = types.str;
-            description = "Path to environment file containing TELEGRAM_API_ID, TELEGRAM_API_HASH, DISCORD_WEBHOOK_URL, and TELEGRAM_CHANNELS";
+            description = "Path to environment file containing TELEGRAM_API_ID, TELEGRAM_API_HASH, and DISCORD_WEBHOOK_URL";
         };
     };
 
