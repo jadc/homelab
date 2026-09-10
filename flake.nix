@@ -19,17 +19,16 @@
     in {
         nixosConfigurations = let inherit (self) outputs; in {
             ${hostname} = nixpkgs.lib.nixosSystem {
-                inherit system;
-                pkgs = import nixpkgs {
-                    inherit system;
-                    config.allowUnfree = true;
-                };
                 specialArgs = {
-                    inherit inputs outputs system;
+                    inherit inputs outputs;
                 };
 
                 modules = [
-                    { networking.hostName = hostname; }
+                    {
+                        networking.hostName = hostname;
+                        nixpkgs.hostPlatform = system;
+                        nixpkgs.config.allowUnfree = true;
+                    }
                     inputs.sparkyfitness.nixosModules.sparkyfitness
                     ./configuration.nix
                     ./hardware-configuration.nix
