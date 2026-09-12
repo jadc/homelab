@@ -4,8 +4,9 @@
 
 {
     environment.systemPackages = with pkgs; [
+        exiftool
         git
-        htop
+        btop
         pciutils
         tmux
         vim
