@@ -6,11 +6,6 @@
             url = "git+ssh://git@github.com/jadc/homelab-secrets";
             flake = false;
         };
-
-        sparkyfitness = {
-            url = "github:CodeWithCJ/SparkyFitness";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
     };
 
     outputs = { self, nixpkgs, ... } @ inputs: let
@@ -29,7 +24,6 @@
                         nixpkgs.hostPlatform = system;
                         nixpkgs.config.allowUnfree = true;
                     }
-                    inputs.sparkyfitness.nixosModules.sparkyfitness
                     ./configuration.nix
                     ./hardware-configuration.nix
                     ./config
