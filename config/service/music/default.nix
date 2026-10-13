@@ -42,6 +42,23 @@ in
                 default = null;
                 description = "Path to environment file for Navidrome";
             };
+
+            domain = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = "Domain to serve Navidrome on via Caddy (null = no reverse proxy)";
+                example = "music.example.com";
+            };
+        };
+
+        feishin = {
+            enable = mkEnableOption "Feishin as the web UI on navidrome.domain, replacing Navidrome's UI";
+
+            serverName = mkOption {
+                type = types.str;
+                default = "Navidrome";
+                description = "Server name shown in Feishin";
+            };
         };
 
         slskd = {
@@ -116,6 +133,48 @@ in
                 EnvironmentFile = lib.mkIf (cfg.navidrome.environmentFile != null) cfg.navidrome.environmentFile;
             };
         })
+
+        # Reverse proxy for navidrome.domain
+        (let
+            domain = cfg.navidrome.domain;
+            caddyTls = config.homelab.service.caddy.tls;
+            tls = lib.optionalString (caddyTls.certFile != null && caddyTls.keyFile != null)
+                "tls /etc/caddy/cert.pem /etc/caddy/private.key";
+            navidrome = "reverse_proxy localhost:${toString cfg.navidrome.port}";
+        in lib.mkMerge [
+            # Without Feishin: whole domain goes to Navidrome (native web UI)
+            (lib.mkIf (cfg.navidrome.enable && domain != null && !cfg.feishin.enable) {
+                services.caddy.virtualHosts.${domain}.extraConfig = ''
+                    ${tls}
+                    ${navidrome}
+                '';
+            })
+
+            # With Feishin: Feishin serves the UI, Navidrome API paths are proxied.
+            # More specific handle paths win over Feishin's catch-all handle.
+            (lib.mkIf (cfg.navidrome.enable && domain != null && cfg.feishin.enable) {
+                services.feishin = {
+                    enable = true;
+                    domain = domain;
+                    caddy.enable = true;
+                    settings = {
+                        ANALYTICS_DISABLED = "true";
+                        SERVER_NAME = cfg.feishin.serverName;
+                        SERVER_TYPE = "navidrome";
+                        SERVER_URL = "https://${domain}";
+                        SERVER_LOCK = "true";
+                    };
+                };
+
+                services.caddy.virtualHosts.${domain}.extraConfig = ''
+                    ${tls}
+                    handle /rest/* { ${navidrome} }
+                    handle /share/* { ${navidrome} }
+                    handle /auth/* { ${navidrome} }
+                    handle /api/* { ${navidrome} }
+                '';
+            })
+        ])
 
         # slskd
         (lib.mkIf cfg.slskd.enable {
