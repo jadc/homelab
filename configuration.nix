@@ -114,16 +114,14 @@
                 navidrome = {
                     enable = true;
                     environmentFile = "${inputs.secrets}/navidrome.env";
+                    domain = "music.jad.red";
                 };
+                feishin.enable = true;
                 beets.enable = true;
                 slskd = {
                     enable = true;
                     environmentFile = "${inputs.secrets}/slskd.env";
                 };
-            };
-            caddy.proxies.navidrome = {
-                domain = "music.jad.red";
-                port = 4533;
             };
 
             immich = {
