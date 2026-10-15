@@ -2,6 +2,10 @@
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+        pi = {
+            url = "github:jadc/pi";
+        };
+
         secrets = {
             url = "git+ssh://git@github.com/jadc/homelab-secrets";
             flake = false;

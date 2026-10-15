@@ -149,6 +149,8 @@
 
             docker.enable = true;
 
+            k3s.enable = true;
+
             vm = {
                 enable = true;
                 hugepages = {
