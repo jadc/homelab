@@ -19,6 +19,8 @@ in
         services.k3s = {
             enable = true;
             role = "server";
+            # Development only: don't expose anything on host ports 80/443
+            extraFlags = [ "--disable=traefik" "--disable=servicelb" ];
         };
 
         networking.firewall.allowedTCPPorts = [ 6443 ];
