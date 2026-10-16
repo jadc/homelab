@@ -4,13 +4,16 @@
 
 {
     environment.systemPackages = with pkgs; [
-        exiftool
-        git
         btop
+        exiftool
+        gh
+        git
         herdr
         pciutils
         vim
     ];
 
     environment.variables.EDITOR = "vim";
+
+    programs.direnv.enable = true;
 }
