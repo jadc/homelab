@@ -7,8 +7,10 @@
         exiftool
         git
         btop
+        herdr
         pciutils
-        tmux
         vim
     ];
+
+    environment.variables.EDITOR = "vim";
 }
