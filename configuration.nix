@@ -151,6 +151,13 @@
 
             k3s.enable = true;
 
+            github-runner = {
+                enable = true;
+                url = "https://github.com/Tankeon";
+                tokenFile = "${inputs.secrets}/chieftain-runner.token";
+                count = 8;
+            };
+
             vm = {
                 enable = true;
                 hugepages = {
