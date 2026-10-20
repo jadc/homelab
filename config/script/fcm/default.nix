@@ -28,8 +28,17 @@ in
 
             path = [ pkgs.ffmpeg pkgs.git ];
 
+            # uv builds a new environment per fcm.py store path and never removes old ones;
+            # use a dedicated cache and clear stale entries while the cache lock is free
+            environment.UV_CACHE_DIR = "/var/cache/${name}";
+
             serviceConfig = {
-                ExecStartPre = "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec";
+                CacheDirectory = name;
+                ExecStartPre = [
+                    "${pkgs.coreutils}/bin/rm -rf /var/cache/${name}/environments-v2"
+                    "${pkgs.uv}/bin/uv cache prune"
+                    "${pkgs.uv}/bin/uv tool install --python ${pkgs.python3}/bin/python3 instarec"
+                ];
                 ExecStart = "${pkgs.uv}/bin/uv run --python ${pkgs.python3}/bin/python3 ${./fcm.py}";
                 Environment = "PYTHONUNBUFFERED=1";
                 Restart = "always";
