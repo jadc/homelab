@@ -40,6 +40,8 @@ in
     config = lib.mkIf cfg.enable {
         homelab.service.docker.enable = true;
 
+        boot.runSize = "40%";
+
         users = {
             users.${cfg.user} = {
                 isSystemUser = true;
