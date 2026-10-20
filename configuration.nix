@@ -155,7 +155,7 @@
                 enable = true;
                 url = "https://github.com/Tankeon";
                 tokenFile = "${inputs.secrets}/chieftain-runner.token";
-                count = 8;
+                count = 3;
             };
 
             vm = {
