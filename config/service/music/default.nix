@@ -104,6 +104,7 @@ in
             services.navidrome = {
                 enable = true;
                 openFirewall = true;
+                withPlugins = p: [ p.lyrics-plugin ];
                 settings = {
                     Address = "0.0.0.0";
                     Port = cfg.navidrome.port;
@@ -120,6 +121,8 @@ in
                     "Search.FullString" = true;
                     # Show artists in albums they featured on
                     SubsonicArtistParticipations = true;
+                    # Prefer lyrics stored with the files, falling back to the lyrics plugin
+                    LyricsPriority = ".ttml,.yaml,.yml,.elrc,.lrc,.srt,.txt,embedded,nd-lyrics";
                 };
             };
 
