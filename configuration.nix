@@ -158,6 +158,8 @@
                 count = 3;
             };
 
+            t3code.enable = true;
+
             vm = {
                 enable = true;
                 hugepages = {
