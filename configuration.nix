@@ -64,7 +64,7 @@
 
             caddy = {
                 enable = true;
-                tls.certFile = toString ./config/service/caddy/cert.pem;
+                tls.certFile = "${./config/service/caddy/cert.pem}";
                 tls.keyFile = "${inputs.secrets}/ssl-private.key";
             };
 
@@ -184,7 +184,7 @@
             caddy.proxies.wot-skins = {
                 domain = "chems.gg";
                 port = 3000;
-                tls.certFile = toString ./config/service/caddy/chems.gg.pem;
+                tls.certFile = "${./config/service/caddy/chems.gg.pem}";
                 tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
             };
 
@@ -197,7 +197,7 @@
             caddy.proxies.rudolfs = {
                 domain = "lfs.chems.gg";
                 port = 8079;
-                tls.certFile = toString ./config/service/caddy/chems.gg.pem;
+                tls.certFile = "${./config/service/caddy/chems.gg.pem}";
                 tls.keyFile = "${inputs.secrets}/chems.gg-private.key";
             };
 
