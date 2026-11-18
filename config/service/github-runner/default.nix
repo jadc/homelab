@@ -35,12 +35,32 @@ in
             default = name;
             description = "Group under which the runners run";
         };
+
+        rustCache = {
+            enable = mkEnableOption "a Rust build cache shared by all runners (shared CARGO_HOME and sccache)";
+
+            directory = mkOption {
+                type = types.str;
+                default = "/var/cache/${name}";
+                description = "Persistent directory holding the shared CARGO_HOME and sccache cache";
+            };
+
+            size = mkOption {
+                type = types.str;
+                default = "15G";
+                description = "Maximum size of the sccache cache, after which the oldest entries are evicted";
+            };
+        };
     };
 
     config = lib.mkIf cfg.enable {
         homelab.service.docker.enable = true;
 
         boot.runSize = "40%";
+
+        systemd.tmpfiles.rules = lib.mkIf cfg.rustCache.enable (builtins.map
+            (dir: "d ${dir} 0750 ${cfg.user} ${cfg.group} -")
+            [ cfg.rustCache.directory "${cfg.rustCache.directory}/cargo" "${cfg.rustCache.directory}/sccache" ]);
 
         users = {
             users.${cfg.user} = {
@@ -59,6 +79,16 @@ in
             # Re-register cleanly when the state directory is wiped
             replace = true;
 
+            # sccache needs identical source paths across runners; HOME differs and is wiped on start
+            extraEnvironment = lib.mkIf cfg.rustCache.enable {
+                CARGO_HOME = "${cfg.rustCache.directory}/cargo";
+                RUSTC_WRAPPER = lib.getExe pkgs.sccache;
+                SCCACHE_DIR = "${cfg.rustCache.directory}/sccache";
+                SCCACHE_CACHE_SIZE = cfg.rustCache.size;
+                # Incremental builds are uncacheable
+                CARGO_INCREMENTAL = "0";
+            };
+
             serviceOverrides = {
                 Restart = lib.mkForce "on-failure";
                 RestartSec = 30;
@@ -69,6 +99,9 @@ in
                 # The runner reads /proc/1/cgroup before starting job/service containers;
                 # the module's default ProtectProc = "invisible" hides PID 1 from this user
                 ProtectProc = lib.mkForce "default";
+
+                # ProtectSystem = "strict" is otherwise read-only
+                ReadWritePaths = lib.mkIf cfg.rustCache.enable [ cfg.rustCache.directory ];
             };
 
             # Tools that GitHub-hosted ubuntu runners provide and common actions expect
@@ -90,7 +123,7 @@ in
                 gnumake
                 pkg-config
                 rustup
-            ];
+            ] ++ lib.optional cfg.rustCache.enable sccache;
         };
     };
 }

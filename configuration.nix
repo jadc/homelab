@@ -156,6 +156,7 @@
                 url = "https://github.com/Tankeon";
                 tokenFile = "${inputs.secrets}/chieftain-runner.token";
                 count = 3;
+                rustCache.enable = true;
             };
 
             t3code.enable = true;
