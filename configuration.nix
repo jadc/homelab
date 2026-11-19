@@ -147,7 +147,11 @@
                 };
             };
 
-            docker.enable = true;
+            docker = {
+                enable = true;
+                buildCacheSize = "100GB";
+                pruneAge = "336h";
+            };
 
             k3s.enable = true;
 
@@ -156,7 +160,10 @@
                 url = "https://github.com/Tankeon";
                 tokenFile = "${inputs.secrets}/chieftain-runner.token";
                 count = 3;
-                rustCache.enable = true;
+                rustCache = {
+                    enable = true;
+                    size = "100G";
+                };
             };
 
             t3code.enable = true;
