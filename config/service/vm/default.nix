@@ -8,6 +8,12 @@ in
     options.homelab.service.${name} = with lib; {
         enable = mkEnableOption name;
 
+        wol = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Name of the libvirt guest to start when receiving a WoL packet (null to disable)";
+        };
+
         hugepages = {
             enable = mkEnableOption "dynamic hugepage allocation for a VM";
 
@@ -76,9 +82,9 @@ in
         };
 
         # Start VM when receiving WoL packet
-        homelab.service.wol = {
+        homelab.service.wol = lib.mkIf (cfg.wol != null) {
             enable = true;
-            command = "${pkgs.libvirt}/bin/virsh start win11";
+            command = "${pkgs.libvirt}/bin/virsh start ${lib.escapeShellArg cfg.wol}";
         };
     };
 }

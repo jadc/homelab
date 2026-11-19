@@ -164,10 +164,11 @@
             vm = {
                 enable = true;
                 hugepages = {
-                    enable = true;
+                    enable = false;
                     size = 32 * 512;
                     guest = "win11";
                 };
+                #wol = "win11";
             };
 
             telegram = {
